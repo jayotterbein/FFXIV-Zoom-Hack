@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this._autoApplyCheckbox = new System.Windows.Forms.CheckBox();
             this._zoomSettingsBox = new System.Windows.Forms.GroupBox();
             this._fovDefaultButton = new System.Windows.Forms.Button();
             this._zoomDefaultButton = new System.Windows.Forms.Button();
@@ -48,15 +48,15 @@
             // 
             // checkBox1
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.Location = new System.Drawing.Point(6, 19);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(219, 24);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Automatically apply on load";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this._autoApplyCheckbox.AutoSize = true;
+            this._autoApplyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._autoApplyCheckbox.Location = new System.Drawing.Point(6, 19);
+            this._autoApplyCheckbox.Name = "_autoApplyCheckbox";
+            this._autoApplyCheckbox.Size = new System.Drawing.Size(219, 24);
+            this._autoApplyCheckbox.TabIndex = 0;
+            this._autoApplyCheckbox.Text = "Automatically apply on load";
+            this._autoApplyCheckbox.UseVisualStyleBackColor = true;
+            this._autoApplyCheckbox.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // _zoomSettingsBox
             // 
@@ -120,7 +120,7 @@
             this._processListBox.Controls.Add(this._gotoProcessButton);
             this._processListBox.Controls.Add(this.label1);
             this._processListBox.Controls.Add(this._processList);
-            this._processListBox.Controls.Add(this.checkBox1);
+            this._processListBox.Controls.Add(this._autoApplyCheckbox);
             this._processListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._processListBox.Location = new System.Drawing.Point(13, 12);
             this._processListBox.Name = "_processListBox";
@@ -229,7 +229,7 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox _autoApplyCheckbox;
         private System.Windows.Forms.GroupBox _zoomSettingsBox;
         private System.Windows.Forms.GroupBox _processListBox;
         private System.Windows.Forms.Label _fovLabel;
