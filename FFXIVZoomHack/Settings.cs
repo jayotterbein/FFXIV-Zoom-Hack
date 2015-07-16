@@ -22,6 +22,9 @@ namespace FFXIVZoomHack
             DX11_ZoomMax = 0x100;
             DX11_FovCurrent = 0x104;
             DX11_FovMax = 0x108;
+
+            DesiredZoom = 20;
+            DesiredFov = 0.78f;
         }
 
         private static string SettingsFile
@@ -38,6 +41,8 @@ namespace FFXIVZoomHack
         }
 
         public bool AutoApply { get; set; }
+        public float DesiredFov { get; set; }
+        public float DesiredZoom { get; set; }
         public int[] DX9_StructureAddress { get; set; }
         public int DX9_ZoomCurrent { get; set; }
         public int DX9_ZoomMax { get; set; }
@@ -89,6 +94,12 @@ namespace FFXIVZoomHack
                                 settings.DX11_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber);
                                 settings.DX11_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber);
                                 break;
+                            case "DesiredZoom":
+                                settings.DesiredZoom = float.Parse(element.Value);
+                                break;
+                            case "DesiredFov":
+                                settings.DesiredFov = float.Parse(element.Value);
+                                break;
                         }
                     }
                 }
@@ -119,7 +130,9 @@ namespace FFXIVZoomHack
                         new XElement("ZoomMax", DX11_ZoomMax.ToString("X")),
                         new XElement("FovCurrent", DX11_FovCurrent.ToString("X")),
                         new XElement("FovMax", DX11_FovMax.ToString("X"))
-                        )
+                        ),
+                    new XElement("DesiredZoom", DesiredZoom),
+                    new XElement("DesiredFov", DesiredFov)
                     )
                 );
 

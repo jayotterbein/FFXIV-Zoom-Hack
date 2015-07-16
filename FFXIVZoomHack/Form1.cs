@@ -26,10 +26,23 @@ namespace FFXIVZoomHack
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _timer = new Timer(TimerCallback, null, TimeSpan.FromMilliseconds(100), Timeout.InfiniteTimeSpan);
             _autoApplyCheckbox.Checked = Settings.AutoApply;
-
             _autoApplyCheckbox.CheckedChanged += AutoApplyCheckChanged;
+
+            _zoomUpDown.Value = (decimal) Settings.DesiredZoom;
+            _zoomUpDown.ValueChanged += NumberChanged;
+            _fovUpDown.Value = (decimal) Settings.DesiredFov;
+            _fovUpDown.ValueChanged += NumberChanged;
+
+            _timer = new Timer(TimerCallback, null, TimeSpan.FromMilliseconds(100), Timeout.InfiniteTimeSpan);
+        }
+
+        private void NumberChanged(object sender, EventArgs e)
+        {
+            Settings.DesiredZoom = (float) _zoomUpDown.Value;
+            Settings.DesiredFov = (float) _fovUpDown.Value;
+            Settings.Save();
+            ApplyChanges();
         }
 
         private void TimerCallback(object state)
@@ -41,8 +54,7 @@ namespace FFXIVZoomHack
                     {
                         var activePids = Memory.GetPids()
                             .ToArray();
-                        var knownPids = _processList.Items.Cast<int>()
-                            .ToArray();
+                        var knownPids = GetCurrentPids();
                         foreach (var pid in activePids.Except(knownPids))
                         {
                             _processList.Items.Add(pid);
@@ -68,7 +80,7 @@ namespace FFXIVZoomHack
                                 .ToArray();
                             if (newPids.Any())
                             {
-                                UpdateZoom(newPids);
+                                ApplyChanges(newPids);
                             }
                         }
                     });
@@ -83,18 +95,27 @@ namespace FFXIVZoomHack
             }
         }
 
-        private static void UpdateZoom(IEnumerable<int> pids)
+        private IReadOnlyCollection<int> GetCurrentPids()
         {
-            foreach (var pid in pids)
+            return _processList.Items.Cast<int>().ToArray();
+        }
+
+        private void ApplyChanges(IEnumerable<int> pids = null)
+        {
+            foreach (var pid in (pids ?? GetCurrentPids()))
             {
                 Memory.Apply(Settings, pid);
             }
         }
 
-        private static void AutoApplyCheckChanged(object sender, EventArgs e)
+        private void AutoApplyCheckChanged(object sender, EventArgs e)
         {
             Settings.AutoApply = !Settings.AutoApply;
             Settings.Save();
+            if (Settings.AutoApply)
+            {
+                ApplyChanges();
+            }
         }
 
         private void Invoke(Action action)
@@ -123,5 +144,15 @@ namespace FFXIVZoomHack
 
         [DllImport("USER32.DLL")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private void _zoomDefaultButton_Click(object sender, EventArgs e)
+        {
+            _zoomUpDown.Value = 20m;
+        }
+
+        private void _fovDefaultButton_Click(object sender, EventArgs e)
+        {
+            _fovUpDown.Value = .78m;
+        }
     }
 }

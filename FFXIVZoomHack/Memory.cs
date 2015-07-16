@@ -55,21 +55,28 @@ namespace FFXIVZoomHack
 
         private static void ApplyX86(Settings settings, Process process, IntPtr ptr)
         {
-            var addr = GetAddress(4, process, ptr, new[] {0xECC8D0}, 0xF0);
-            Write(100f, ptr, addr);
+            var addr = GetAddress(4, process, ptr, settings.DX9_StructureAddress, settings.DX9_ZoomMax);
+            Write(settings.DesiredZoom, ptr, addr);
+            addr = GetAddress(4, process, ptr, settings.DX9_StructureAddress, settings.DX9_ZoomCurrent);
+            Write(settings.DesiredZoom, ptr, addr);
+
+            addr = GetAddress(4, process, ptr, settings.DX9_StructureAddress, settings.DX9_FovCurrent);
+            Write(settings.DesiredFov, ptr, addr);
+            addr = GetAddress(4, process, ptr, settings.DX9_StructureAddress, settings.DX9_FovMax);
+            Write(settings.DesiredFov, ptr, addr);
         }
 
         private static void ApplyX64(Settings settings, Process process, IntPtr ptr)
         {
             var addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_ZoomMax);
-            Write(100f, ptr, addr);
+            Write(settings.DesiredZoom, ptr, addr);
             addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_ZoomCurrent);
-            Write(100f, ptr, addr);
+            Write(settings.DesiredZoom, ptr, addr);
 
             addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_FovCurrent);
-            Write(1.2f, ptr, addr);
+            Write(settings.DesiredFov, ptr, addr);
             addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_FovMax);
-            Write(1.2f, ptr, addr);
+            Write(settings.DesiredFov, ptr, addr);
         }
 
         private static void Write(float value, IntPtr handle, IntPtr address)
