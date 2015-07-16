@@ -30,27 +30,28 @@
         {
             this._autoApplyCheckbox = new System.Windows.Forms.CheckBox();
             this._zoomSettingsBox = new System.Windows.Forms.GroupBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this._zoomMaxValue = new System.Windows.Forms.NumericUpDown();
             this._fovDefaultButton = new System.Windows.Forms.Button();
             this._zoomDefaultButton = new System.Windows.Forms.Button();
             this._fovLabel = new System.Windows.Forms.Label();
             this._zoomLabel = new System.Windows.Forms.Label();
             this._processListBox = new System.Windows.Forms.GroupBox();
-            this._zoomMaxValue = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this._processList = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this._gotoProcessButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this._processList = new System.Windows.Forms.ComboBox();
             this._zoomSettingsBox.SuspendLayout();
-            this._processListBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._zoomMaxValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._zoomMaxValue)).BeginInit();
+            this._processListBox.SuspendLayout();
             this.SuspendLayout();
             // 
-            // checkBox1
+            // _autoApplyCheckbox
             // 
             this._autoApplyCheckbox.AutoSize = true;
             this._autoApplyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._autoApplyCheckbox.Location = new System.Drawing.Point(6, 19);
+            this._autoApplyCheckbox.Location = new System.Drawing.Point(8, 23);
+            this._autoApplyCheckbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._autoApplyCheckbox.Name = "_autoApplyCheckbox";
             this._autoApplyCheckbox.Size = new System.Drawing.Size(219, 24);
             this._autoApplyCheckbox.TabIndex = 0;
@@ -69,27 +70,83 @@
             this._zoomSettingsBox.Controls.Add(this._fovLabel);
             this._zoomSettingsBox.Controls.Add(this._zoomLabel);
             this._zoomSettingsBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._zoomSettingsBox.Location = new System.Drawing.Point(13, 150);
+            this._zoomSettingsBox.Location = new System.Drawing.Point(17, 185);
+            this._zoomSettingsBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._zoomSettingsBox.Name = "_zoomSettingsBox";
-            this._zoomSettingsBox.Size = new System.Drawing.Size(474, 109);
+            this._zoomSettingsBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._zoomSettingsBox.Size = new System.Drawing.Size(632, 134);
             this._zoomSettingsBox.TabIndex = 1;
             this._zoomSettingsBox.TabStop = false;
             this._zoomSettingsBox.Text = "Zoom Settings";
             // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.DecimalPlaces = 2;
+            this.numericUpDown1.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericUpDown1.Location = new System.Drawing.Point(324, 102);
+            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            131072});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(287, 26);
+            this.numericUpDown1.TabIndex = 7;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // _zoomMaxValue
+            // 
+            this._zoomMaxValue.Location = new System.Drawing.Point(13, 102);
+            this._zoomMaxValue.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._zoomMaxValue.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this._zoomMaxValue.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this._zoomMaxValue.Name = "_zoomMaxValue";
+            this._zoomMaxValue.Size = new System.Drawing.Size(287, 26);
+            this._zoomMaxValue.TabIndex = 6;
+            this._zoomMaxValue.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
             // _fovDefaultButton
             // 
-            this._fovDefaultButton.Location = new System.Drawing.Point(362, 45);
+            this._fovDefaultButton.Location = new System.Drawing.Point(483, 55);
+            this._fovDefaultButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._fovDefaultButton.Name = "_fovDefaultButton";
-            this._fovDefaultButton.Size = new System.Drawing.Size(96, 26);
+            this._fovDefaultButton.Size = new System.Drawing.Size(128, 32);
             this._fovDefaultButton.TabIndex = 5;
             this._fovDefaultButton.Text = "Default";
             this._fovDefaultButton.UseVisualStyleBackColor = true;
             // 
             // _zoomDefaultButton
             // 
-            this._zoomDefaultButton.Location = new System.Drawing.Point(129, 45);
+            this._zoomDefaultButton.Location = new System.Drawing.Point(172, 55);
+            this._zoomDefaultButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._zoomDefaultButton.Name = "_zoomDefaultButton";
-            this._zoomDefaultButton.Size = new System.Drawing.Size(96, 26);
+            this._zoomDefaultButton.Size = new System.Drawing.Size(128, 32);
             this._zoomDefaultButton.TabIndex = 4;
             this._zoomDefaultButton.Text = "Default";
             this._zoomDefaultButton.UseVisualStyleBackColor = true;
@@ -97,7 +154,8 @@
             // _fovLabel
             // 
             this._fovLabel.AutoSize = true;
-            this._fovLabel.Location = new System.Drawing.Point(239, 45);
+            this._fovLabel.Location = new System.Drawing.Point(319, 55);
+            this._fovLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._fovLabel.Name = "_fovLabel";
             this._fovLabel.Size = new System.Drawing.Size(99, 20);
             this._fovLabel.TabIndex = 2;
@@ -106,7 +164,8 @@
             // _zoomLabel
             // 
             this._zoomLabel.AutoSize = true;
-            this._zoomLabel.Location = new System.Drawing.Point(6, 45);
+            this._zoomLabel.Location = new System.Drawing.Point(8, 55);
+            this._zoomLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._zoomLabel.Name = "_zoomLabel";
             this._zoomLabel.Size = new System.Drawing.Size(83, 20);
             this._zoomLabel.TabIndex = 1;
@@ -121,107 +180,64 @@
             this._processListBox.Controls.Add(this._processList);
             this._processListBox.Controls.Add(this._autoApplyCheckbox);
             this._processListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._processListBox.Location = new System.Drawing.Point(13, 12);
+            this._processListBox.Location = new System.Drawing.Point(17, 15);
+            this._processListBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._processListBox.Name = "_processListBox";
-            this._processListBox.Size = new System.Drawing.Size(474, 132);
+            this._processListBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._processListBox.Size = new System.Drawing.Size(632, 162);
             this._processListBox.TabIndex = 2;
             this._processListBox.TabStop = false;
             this._processListBox.Text = "Processes";
             // 
-            // _zoomMaxValue
+            // _gotoProcessButton
             // 
-            this._zoomMaxValue.Location = new System.Drawing.Point(10, 83);
-            this._zoomMaxValue.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this._zoomMaxValue.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this._zoomMaxValue.Name = "_zoomMaxValue";
-            this._zoomMaxValue.Size = new System.Drawing.Size(215, 26);
-            this._zoomMaxValue.TabIndex = 6;
-            this._zoomMaxValue.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.DecimalPlaces = 2;
-            this.numericUpDown1.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.numericUpDown1.Location = new System.Drawing.Point(243, 83);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            131072});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(215, 26);
-            this.numericUpDown1.TabIndex = 7;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            // 
-            // _processList
-            // 
-            this._processList.FormattingEnabled = true;
-            this._processList.Location = new System.Drawing.Point(95, 57);
-            this._processList.Name = "_processList";
-            this._processList.Size = new System.Drawing.Size(172, 28);
-            this._processList.TabIndex = 1;
+            this._gotoProcessButton.Location = new System.Drawing.Point(364, 66);
+            this._gotoProcessButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._gotoProcessButton.Name = "_gotoProcessButton";
+            this._gotoProcessButton.Size = new System.Drawing.Size(191, 32);
+            this._gotoProcessButton.TabIndex = 8;
+            this._gotoProcessButton.Text = "Bring to Front";
+            this._gotoProcessButton.UseVisualStyleBackColor = true;
+            this._gotoProcessButton.Click += new System.EventHandler(this._gotoProcessButton_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 57);
+            this.label1.Location = new System.Drawing.Point(8, 70);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 20);
             this.label1.TabIndex = 8;
             this.label1.Text = "Processes";
             // 
-            // _gotoProcessButton
+            // _processList
             // 
-            this._gotoProcessButton.Location = new System.Drawing.Point(273, 54);
-            this._gotoProcessButton.Name = "_gotoProcessButton";
-            this._gotoProcessButton.Size = new System.Drawing.Size(143, 26);
-            this._gotoProcessButton.TabIndex = 8;
-            this._gotoProcessButton.Text = "Bring to Front";
-            this._gotoProcessButton.UseVisualStyleBackColor = true;
+            this._processList.FormattingEnabled = true;
+            this._processList.Location = new System.Drawing.Point(127, 70);
+            this._processList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._processList.Name = "_processList";
+            this._processList.Size = new System.Drawing.Size(228, 28);
+            this._processList.TabIndex = 1;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(499, 271);
+            this.ClientSize = new System.Drawing.Size(665, 334);
             this.Controls.Add(this._processListBox);
             this.Controls.Add(this._zoomSettingsBox);
-            this.MaximumSize = new System.Drawing.Size(515, 310);
-            this.MinimumSize = new System.Drawing.Size(515, 310);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MaximumSize = new System.Drawing.Size(681, 373);
+            this.MinimumSize = new System.Drawing.Size(681, 373);
             this.Name = "Form1";
             this.Text = "FFXIV Zoom Hack";
             this.Load += new System.EventHandler(this.Form1_Load);
             this._zoomSettingsBox.ResumeLayout(false);
             this._zoomSettingsBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._zoomMaxValue)).EndInit();
             this._processListBox.ResumeLayout(false);
             this._processListBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._zoomMaxValue)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
 
         }

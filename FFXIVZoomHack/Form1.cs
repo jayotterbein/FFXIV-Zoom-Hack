@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using Timer = System.Threading.Timer;
@@ -71,6 +73,10 @@ namespace FFXIVZoomHack
                         }
                     });
             }
+            catch
+            {
+                /* something went wrong on the background thread, should find a way to log this..*/
+            }
             finally
             {
                 _timer.Change(TimeSpan.FromSeconds(5), Timeout.InfiniteTimeSpan);
@@ -85,7 +91,7 @@ namespace FFXIVZoomHack
             }
         }
 
-        private void AutoApplyCheckChanged(object sender, EventArgs e)
+        private static void AutoApplyCheckChanged(object sender, EventArgs e)
         {
             Settings.AutoApply = !Settings.AutoApply;
             Settings.Save();
@@ -96,5 +102,26 @@ namespace FFXIVZoomHack
             Delegate d = action;
             Invoke(d);
         }
+
+        private void _gotoProcessButton_Click(object sender, EventArgs e)
+        {
+            if (_processList.SelectedItem == null)
+            {
+                return;
+            }
+
+            var selectedPid = (int) _processList.SelectedItem;
+            using (var process = Process.GetProcessById(selectedPid))
+            {
+                var handle = process.MainWindowHandle;
+                if (handle != IntPtr.Zero)
+                {
+                    SetForegroundWindow(handle);
+                }
+            }
+        }
+
+        [DllImport("USER32.DLL")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
     }
 }
