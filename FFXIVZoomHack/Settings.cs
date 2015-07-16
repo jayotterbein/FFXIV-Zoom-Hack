@@ -18,7 +18,10 @@ namespace FFXIVZoomHack
             DX9_ZoomMax = 0xF0;
 
             DX11_StructureAddress = new[] {0x147F680};
-            DX11_ZoomCurrent = 0x100;
+            DX11_ZoomCurrent = 0xF8;
+            DX11_ZoomMax = 0x100;
+            DX11_FovCurrent = 0x104;
+            DX11_FovMax = 0x108;
         }
 
         private static string SettingsFile

@@ -26,7 +26,7 @@ namespace FFXIVZoomHack
             }
         }
 
-        public static void Apply(int pid)
+        public static void Apply(Settings settings, int pid)
         {
             using (var p = Process.GetProcessById(pid))
             {
@@ -36,11 +36,11 @@ namespace FFXIVZoomHack
                     ptr = OpenProcess(ProcessFlags, false, pid);
                     if (string.Equals(p.ProcessName, "ffxiv", StringComparison.Ordinal))
                     {
-                        ApplyX86(p, ptr);
+                        ApplyX86(settings, p, ptr);
                     }
                     else if (string.Equals(p.ProcessName, "ffxiv_dx11", StringComparison.Ordinal))
                     {
-                        ApplyX64(p, ptr);
+                        ApplyX64(settings, p, ptr);
                     }
                 }
                 finally
@@ -53,25 +53,30 @@ namespace FFXIVZoomHack
             }
         }
 
-        private static void ApplyX86(Process process, IntPtr ptr)
+        private static void ApplyX86(Settings settings, Process process, IntPtr ptr)
         {
             var addr = GetAddress(4, process, ptr, new[] {0xECC8D0}, 0xF0);
-            var buffer = BitConverter.GetBytes(500.0f);
-            IntPtr written;
-            if (!(WriteProcessMemory(ptr, addr, buffer, buffer.Length, out written)))
-            {
-                throw new Exception("Could not write process memory: " + Marshal.GetLastWin32Error());
-            }
+            Write(100f, ptr, addr);
         }
 
-        private static void ApplyX64(Process process, IntPtr ptr)
+        private static void ApplyX64(Settings settings, Process process, IntPtr ptr)
         {
-            var settings = Settings.Load();
-
             var addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_ZoomMax);
-            var buffer = BitConverter.GetBytes(50.0f);
+            Write(100f, ptr, addr);
+            addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_ZoomCurrent);
+            Write(100f, ptr, addr);
+
+            addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_FovCurrent);
+            Write(1.2f, ptr, addr);
+            addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_FovMax);
+            Write(1.2f, ptr, addr);
+        }
+
+        private static void Write(float value, IntPtr handle, IntPtr address)
+        {
+            var buffer = BitConverter.GetBytes(value);
             IntPtr written;
-            if (!(WriteProcessMemory(ptr, addr, buffer, buffer.Length, out written)))
+            if (!(WriteProcessMemory(handle, address, buffer, buffer.Length, out written)))
             {
                 throw new Exception("Could not write process memory: " + Marshal.GetLastWin32Error());
             }

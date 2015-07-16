@@ -87,7 +87,7 @@ namespace FFXIVZoomHack
         {
             foreach (var pid in pids)
             {
-                Memory.Apply(pid);
+                Memory.Apply(Settings, pid);
             }
         }
 
