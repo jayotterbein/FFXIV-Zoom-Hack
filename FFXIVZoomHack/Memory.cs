@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace FFXIVZoomHack
 {
@@ -61,7 +55,7 @@ namespace FFXIVZoomHack
 
         private static void ApplyX86(Process process, IntPtr ptr)
         {
-            var addr = GetAddress<int>(4, process, ptr, new[] { 0xECC8D0 }, 0xF0);
+            var addr = GetAddress(4, process, ptr, new[] {0xECC8D0}, 0xF0);
             var buffer = BitConverter.GetBytes(500.0f);
             IntPtr written;
             if (!(WriteProcessMemory(ptr, addr, buffer, buffer.Length, out written)))
@@ -72,7 +66,9 @@ namespace FFXIVZoomHack
 
         private static void ApplyX64(Process process, IntPtr ptr)
         {
-            var addr = GetAddress<long>(8, process, ptr, new[] {0x147F680}, 0x100);
+            var settings = Settings.Load();
+
+            var addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_ZoomMax);
             var buffer = BitConverter.GetBytes(50.0f);
             IntPtr written;
             if (!(WriteProcessMemory(ptr, addr, buffer, buffer.Length, out written)))
@@ -81,7 +77,7 @@ namespace FFXIVZoomHack
             }
         }
 
-        private static IntPtr GetAddress<T>(byte size, Process process, IntPtr ptr, IEnumerable<int> offsets, int finalOffset)
+        private static IntPtr GetAddress(byte size, Process process, IntPtr ptr, IEnumerable<int> offsets, int finalOffset)
         {
             var addr = process.MainModule.BaseAddress;
             var buffer = new byte[size];
@@ -92,7 +88,7 @@ namespace FFXIVZoomHack
                 {
                     throw new Exception("Unable to read process memory");
                 }
-                addr = (typeof(T) == typeof(long))
+                addr = (size == 8)
                     ? new IntPtr(BitConverter.ToInt64(buffer, 0))
                     : new IntPtr(BitConverter.ToInt32(buffer, 0));
             }

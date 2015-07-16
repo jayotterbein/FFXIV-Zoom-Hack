@@ -56,7 +56,6 @@
             this._autoApplyCheckbox.TabIndex = 0;
             this._autoApplyCheckbox.Text = "Automatically apply on load";
             this._autoApplyCheckbox.UseVisualStyleBackColor = true;
-            this._autoApplyCheckbox.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // _zoomSettingsBox
             // 

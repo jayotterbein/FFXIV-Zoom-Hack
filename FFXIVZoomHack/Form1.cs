@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Serialization;
-using FFXIVZoomHack.Properties;
 using Timer = System.Threading.Timer;
 
 namespace FFXIVZoomHack
@@ -21,21 +12,22 @@ namespace FFXIVZoomHack
         private static readonly Lazy<Settings> LazySettings = new Lazy<Settings>(Settings.Load);
         private Timer _timer;
 
-        private static Settings Settings
-        {
-            get { return LazySettings.Value; }
-        }
-
-
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private static Settings Settings
+        {
+            get { return LazySettings.Value; }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             _timer = new Timer(TimerCallback, null, TimeSpan.FromMilliseconds(100), Timeout.InfiniteTimeSpan);
             _autoApplyCheckbox.Checked = Settings.AutoApply;
+
+            _autoApplyCheckbox.CheckedChanged += AutoApplyCheckChanged;
         }
 
         private void TimerCallback(object state)
@@ -45,8 +37,10 @@ namespace FFXIVZoomHack
                 Invoke(
                     () =>
                     {
-                        var activePids = Memory.GetPids().ToArray();
-                        var knownPids = _processList.Items.Cast<int>().ToArray();
+                        var activePids = Memory.GetPids()
+                            .ToArray();
+                        var knownPids = _processList.Items.Cast<int>()
+                            .ToArray();
                         foreach (var pid in activePids.Except(knownPids))
                         {
                             _processList.Items.Add(pid);
@@ -68,7 +62,8 @@ namespace FFXIVZoomHack
 
                         if (Settings.AutoApply)
                         {
-                            var newPids = activePids.Except(knownPids).ToArray();
+                            var newPids = activePids.Except(knownPids)
+                                .ToArray();
                             if (newPids.Any())
                             {
                                 UpdateZoom(newPids);
@@ -90,7 +85,7 @@ namespace FFXIVZoomHack
             }
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void AutoApplyCheckChanged(object sender, EventArgs e)
         {
             Settings.AutoApply = !Settings.AutoApply;
             Settings.Save();
