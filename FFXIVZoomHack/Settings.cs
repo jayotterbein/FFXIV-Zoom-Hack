@@ -25,6 +25,8 @@ namespace FFXIVZoomHack
 
             DesiredZoom = 20;
             DesiredFov = 0.78f;
+
+            OffsetUpdateLocation = @"https://raw.githubusercontent.com/jayotterbein/FFXIV-Zoom-Hack/master/Offsets.xml";
         }
 
         private static string SettingsFile
@@ -43,70 +45,71 @@ namespace FFXIVZoomHack
         public bool AutoApply { get; set; }
         public float DesiredFov { get; set; }
         public float DesiredZoom { get; set; }
+
         public int[] DX9_StructureAddress { get; set; }
         public int DX9_ZoomCurrent { get; set; }
         public int DX9_ZoomMax { get; set; }
         public int DX9_FovCurrent { get; set; }
         public int DX9_FovMax { get; set; }
+
         public int[] DX11_StructureAddress { get; set; }
         public int DX11_ZoomCurrent { get; set; }
         public int DX11_ZoomMax { get; set; }
         public int DX11_FovCurrent { get; set; }
         public int DX11_FovMax { get; set; }
 
-        public static Settings Load()
+        public string OffsetUpdateLocation { get; set; }
+
+        public static Settings Load(string location = null)
         {
             var settings = new Settings();
-            if (File.Exists(SettingsFile))
+            try
             {
-                try
+                var doc = XDocument.Load(location ?? SettingsFile);
+                var root = doc.Element("Root");
+                foreach (var element in root.Elements())
                 {
-                    var doc = XDocument.Load(SettingsFile);
-                    var root = doc.Element("Root");
-                    foreach (var element in root.Elements())
+                    switch (element.Name.LocalName)
                     {
-                        switch (element.Name.LocalName)
-                        {
-                            case "AutoApply":
-                                settings.AutoApply = bool.Parse(element.Value);
-                                break;
-                            case "DX9":
-                                settings.DX9_StructureAddress = element.Element("StructureAddress")
-                                    .Value
-                                    .Split(',')
-                                    .Where(x => !string.IsNullOrEmpty(x))
-                                    .Select(x => int.Parse(x, NumberStyles.HexNumber))
-                                    .ToArray();
-                                settings.DX9_ZoomCurrent = int.Parse(element.Element("ZoomCurrent").Value, NumberStyles.HexNumber);
-                                settings.DX9_ZoomMax = int.Parse(element.Element("ZoomMax").Value, NumberStyles.HexNumber);
-                                settings.DX9_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber);
-                                settings.DX9_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber);
-                                break;
-                            case "DX11":
-                                settings.DX11_StructureAddress = element.Element("StructureAddress")
-                                    .Value
-                                    .Split(',')
-                                    .Where(x => !string.IsNullOrEmpty(x))
-                                    .Select(x => int.Parse(x, NumberStyles.HexNumber))
-                                    .ToArray();
-                                settings.DX11_ZoomCurrent = int.Parse(element.Element("ZoomCurrent").Value, NumberStyles.HexNumber);
-                                settings.DX11_ZoomMax = int.Parse(element.Element("ZoomMax").Value, NumberStyles.HexNumber);
-                                settings.DX11_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber);
-                                settings.DX11_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber);
-                                break;
-                            case "DesiredZoom":
-                                settings.DesiredZoom = float.Parse(element.Value);
-                                break;
-                            case "DesiredFov":
-                                settings.DesiredFov = float.Parse(element.Value);
-                                break;
-                        }
+                        case "AutoApply":
+                            settings.AutoApply = bool.Parse(element.Value);
+                            break;
+                        case "DX9":
+                            settings.DX9_StructureAddress = element.Element("StructureAddress")
+                                .Value
+                                .Split(',')
+                                .Where(x => !string.IsNullOrEmpty(x))
+                                .Select(x => int.Parse(x, NumberStyles.HexNumber))
+                                .ToArray();
+                            settings.DX9_ZoomCurrent = int.Parse(element.Element("ZoomCurrent").Value, NumberStyles.HexNumber);
+                            settings.DX9_ZoomMax = int.Parse(element.Element("ZoomMax").Value, NumberStyles.HexNumber);
+                            settings.DX9_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber);
+                            settings.DX9_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber);
+                            break;
+                        case "DX11":
+                            settings.DX11_StructureAddress = element.Element("StructureAddress")
+                                .Value
+                                .Split(',')
+                                .Where(x => !string.IsNullOrEmpty(x))
+                                .Select(x => int.Parse(x, NumberStyles.HexNumber))
+                                .ToArray();
+                            settings.DX11_ZoomCurrent = int.Parse(element.Element("ZoomCurrent").Value, NumberStyles.HexNumber);
+                            settings.DX11_ZoomMax = int.Parse(element.Element("ZoomMax").Value, NumberStyles.HexNumber);
+                            settings.DX11_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber);
+                            settings.DX11_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber);
+                            break;
+                        case "DesiredZoom":
+                            settings.DesiredZoom = float.Parse(element.Value);
+                            break;
+                        case "DesiredFov":
+                            settings.DesiredFov = float.Parse(element.Value);
+                            break;
                     }
                 }
-                catch
-                {
-                    /* xml failed to load, lose settings */
-                }
+            }
+            catch
+            {
+                /* xml failed to load, lose settings */
             }
             return settings;
         }
@@ -132,7 +135,8 @@ namespace FFXIVZoomHack
                         new XElement("FovMax", DX11_FovMax.ToString("X"))
                         ),
                     new XElement("DesiredZoom", DesiredZoom),
-                    new XElement("DesiredFov", DesiredFov)
+                    new XElement("DesiredFov", DesiredFov),
+                    new XElement("OffsetUpdateLocation", OffsetUpdateLocation)
                     )
                 );
 

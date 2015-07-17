@@ -40,6 +40,8 @@
             this._gotoProcessButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this._processList = new System.Windows.Forms.ComboBox();
+            this._updateOffsetsTextbox = new System.Windows.Forms.TextBox();
+            this._updateOffsetsButton = new System.Windows.Forms.Button();
             this._zoomSettingsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._fovUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._zoomUpDown)).BeginInit();
@@ -50,7 +52,7 @@
             // 
             this._autoApplyCheckbox.AutoSize = true;
             this._autoApplyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._autoApplyCheckbox.Location = new System.Drawing.Point(6, 19);
+            this._autoApplyCheckbox.Location = new System.Drawing.Point(6, 25);
             this._autoApplyCheckbox.Name = "_autoApplyCheckbox";
             this._autoApplyCheckbox.Size = new System.Drawing.Size(219, 24);
             this._autoApplyCheckbox.TabIndex = 0;
@@ -173,16 +175,16 @@
             this._processListBox.Controls.Add(this._processList);
             this._processListBox.Controls.Add(this._autoApplyCheckbox);
             this._processListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._processListBox.Location = new System.Drawing.Point(13, 12);
+            this._processListBox.Location = new System.Drawing.Point(13, 50);
             this._processListBox.Name = "_processListBox";
-            this._processListBox.Size = new System.Drawing.Size(474, 132);
+            this._processListBox.Size = new System.Drawing.Size(474, 94);
             this._processListBox.TabIndex = 2;
             this._processListBox.TabStop = false;
             this._processListBox.Text = "Processes";
             // 
             // _gotoProcessButton
             // 
-            this._gotoProcessButton.Location = new System.Drawing.Point(273, 54);
+            this._gotoProcessButton.Location = new System.Drawing.Point(285, 57);
             this._gotoProcessButton.Name = "_gotoProcessButton";
             this._gotoProcessButton.Size = new System.Drawing.Size(143, 26);
             this._gotoProcessButton.TabIndex = 8;
@@ -193,7 +195,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 57);
+            this.label1.Location = new System.Drawing.Point(6, 52);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 20);
             this.label1.TabIndex = 8;
@@ -202,16 +204,35 @@
             // _processList
             // 
             this._processList.FormattingEnabled = true;
-            this._processList.Location = new System.Drawing.Point(95, 57);
+            this._processList.Location = new System.Drawing.Point(95, 55);
             this._processList.Name = "_processList";
             this._processList.Size = new System.Drawing.Size(172, 28);
             this._processList.TabIndex = 1;
+            // 
+            // _updateOffsetsTextbox
+            // 
+            this._updateOffsetsTextbox.Location = new System.Drawing.Point(13, 13);
+            this._updateOffsetsTextbox.Name = "_updateOffsetsTextbox";
+            this._updateOffsetsTextbox.Size = new System.Drawing.Size(385, 20);
+            this._updateOffsetsTextbox.TabIndex = 3;
+            // 
+            // _updateOffsetsButton
+            // 
+            this._updateOffsetsButton.Location = new System.Drawing.Point(404, 12);
+            this._updateOffsetsButton.Name = "_updateOffsetsButton";
+            this._updateOffsetsButton.Size = new System.Drawing.Size(83, 43);
+            this._updateOffsetsButton.TabIndex = 9;
+            this._updateOffsetsButton.Text = "Update Offsets";
+            this._updateOffsetsButton.UseVisualStyleBackColor = true;
+            this._updateOffsetsButton.Click += new System.EventHandler(this._updateOffsetsButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(499, 271);
+            this.Controls.Add(this._updateOffsetsButton);
+            this.Controls.Add(this._updateOffsetsTextbox);
             this.Controls.Add(this._processListBox);
             this.Controls.Add(this._zoomSettingsBox);
             this.MaximumSize = new System.Drawing.Size(515, 310);
@@ -226,6 +247,7 @@
             this._processListBox.ResumeLayout(false);
             this._processListBox.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -243,6 +265,8 @@
         private System.Windows.Forms.Button _gotoProcessButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox _processList;
+        private System.Windows.Forms.TextBox _updateOffsetsTextbox;
+        private System.Windows.Forms.Button _updateOffsetsButton;
     }
 }
 

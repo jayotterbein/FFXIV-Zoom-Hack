@@ -11,7 +11,7 @@ namespace FFXIVZoomHack
 {
     public partial class Form1 : Form
     {
-        private static readonly Lazy<Settings> LazySettings = new Lazy<Settings>(Settings.Load);
+        private static readonly Lazy<Settings> LazySettings = new Lazy<Settings>(() => Settings.Load());
         private Timer _timer;
 
         public Form1()
@@ -153,6 +153,31 @@ namespace FFXIVZoomHack
         private void _fovDefaultButton_Click(object sender, EventArgs e)
         {
             _fovUpDown.Value = .78m;
+        }
+
+        private void _updateOffsetsButton_Click(object sender, EventArgs e)
+        {
+            _updateOffsetsButton.Enabled = false;
+            Settings.OffsetUpdateLocation = _updateOffsetsTextbox.Text;
+            Settings.Save();
+
+            Cursor = Cursors.WaitCursor;
+
+            ThreadPool.QueueUserWorkItem(
+                _ =>
+                {
+                    var offsets = Settings.Load(Settings.OffsetUpdateLocation);
+                    Settings.DX11_StructureAddress = offsets.DX11_StructureAddress;
+                    Settings.DX11_ZoomCurrent = offsets.DX11_ZoomCurrent;
+                    Settings.DX11_ZoomMax = offsets.DX11_ZoomMax;
+                    Settings.DX11_FovCurrent = offsets.DX11_FovCurrent;
+                    Settings.DX11_FovMax = offsets.DX11_FovMax;
+                    Settings.DX9_StructureAddress = offsets.DX9_StructureAddress;
+                    Settings.DX9_ZoomCurrent = offsets.DX9_ZoomCurrent;
+                    Settings.DX9_ZoomMax = offsets.DX9_ZoomMax;
+                    Settings.DX9_FovCurrent = offsets.DX9_FovCurrent;
+                    Settings.DX9_FovMax = offsets.DX9_FovMax;
+                });
         }
     }
 }
