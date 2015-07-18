@@ -161,7 +161,6 @@ namespace FFXIVZoomHack
         {
             _updateOffsetsButton.Enabled = false;
             Settings.OffsetUpdateLocation = _updateOffsetsTextbox.Text;
-            Settings.Save();
 
             Cursor = Cursors.WaitCursor;
 
