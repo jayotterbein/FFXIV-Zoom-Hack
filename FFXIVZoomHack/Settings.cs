@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace FFXIVZoomHack
@@ -14,20 +16,11 @@ namespace FFXIVZoomHack
         {
             AutoApply = true;
 
-            DX9_StructureAddress = new[] {0xECC8D0};
-            DX9_ZoomMax = 0xF0;
-
-            DX11_StructureAddress = new[] {0x147F680};
-            DX11_ZoomCurrent = 0xF8;
-            DX11_ZoomMax = 0x100;
-            DX11_FovCurrent = 0x104;
-            DX11_FovMax = 0x108;
-
             DesiredZoom = 20;
             DesiredFov = 0.78f;
 
             OffsetUpdateLocation = @"https://raw.githubusercontent.com/jayotterbein/FFXIV-Zoom-Hack/master/Offsets.xml";
-            LastUpdate = "2015-07-17 - patch 3.05";
+            LastUpdate = "unupdated";
         }
 
         private static string SettingsFile
@@ -124,25 +117,7 @@ namespace FFXIVZoomHack
             var doc = new XDocument(
                 new XDeclaration("1.0", Encoding.UTF8.ToString(), "yes"),
                 new XElement("Root",
-                    new XElement("AutoApply", AutoApply),
-                    new XElement("DX9",
-                        new XElement("StructureAddress", string.Join(",", DX9_StructureAddress.Select(x => x.ToString("X")))),
-                        new XElement("ZoomCurrent", DX9_ZoomCurrent.ToString("X")),
-                        new XElement("ZoomMax", DX9_ZoomMax.ToString("X")),
-                        new XElement("FovCurrent", DX9_FovCurrent.ToString("X")),
-                        new XElement("FovMax", DX9_FovMax.ToString("X"))
-                        ),
-                    new XElement("DX11",
-                        new XElement("StructureAddress", string.Join(",", DX11_StructureAddress.Select(x => x.ToString("X")))),
-                        new XElement("ZoomCurrent", DX11_ZoomCurrent.ToString("X")),
-                        new XElement("ZoomMax", DX11_ZoomMax.ToString("X")),
-                        new XElement("FovCurrent", DX11_FovCurrent.ToString("X")),
-                        new XElement("FovMax", DX11_FovMax.ToString("X"))
-                        ),
-                    new XElement("DesiredZoom", DesiredZoom),
-                    new XElement("DesiredFov", DesiredFov),
-                    new XElement("OffsetUpdateLocation", OffsetUpdateLocation),
-                    new XElement("LastUpdate", LastUpdate)
+                    GetSaveElements().ToArray<object>()
                     )
                 );
 
@@ -151,6 +126,34 @@ namespace FFXIVZoomHack
             {
                 doc.Save(sw, SaveOptions.None);
             }
+        }
+
+        private IEnumerable<XElement> GetSaveElements()
+        {
+            yield return new XElement("DX9",
+                new XElement("StructureAddress", string.Join(",", DX9_StructureAddress.Select(x => x.ToString("X")))),
+                new XElement("ZoomCurrent", DX9_ZoomCurrent.ToString("X")),
+                new XElement("ZoomMax", DX9_ZoomMax.ToString("X")),
+                new XElement("FovCurrent", DX9_FovCurrent.ToString("X")),
+                new XElement("FovMax", DX9_FovMax.ToString("X"))
+                );
+            yield return new XElement("DX11",
+                new XElement("StructureAddress", string.Join(",", DX11_StructureAddress.Select(x => x.ToString("X")))),
+                new XElement("ZoomCurrent", DX11_ZoomCurrent.ToString("X")),
+                new XElement("ZoomMax", DX11_ZoomMax.ToString("X")),
+                new XElement("FovCurrent", DX11_FovCurrent.ToString("X")),
+                new XElement("FovMax", DX11_FovMax.ToString("X"))
+                );
+            yield return new XElement("LastUpdate", LastUpdate);
+
+            if ((Control.ModifierKeys & (Keys.Control | Keys.Alt | Keys.Shift)) != 0)
+            {
+                yield break;
+            }
+            yield return new XElement("AutoApply", AutoApply);
+            yield return new XElement("DesiredZoom", DesiredZoom);
+            yield return new XElement("DesiredFov", DesiredFov);
+            yield return new XElement("OffsetUpdateLocation", OffsetUpdateLocation);
         }
     }
 }

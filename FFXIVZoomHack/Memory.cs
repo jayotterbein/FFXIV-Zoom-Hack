@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace FFXIVZoomHack
 {
@@ -28,6 +29,12 @@ namespace FFXIVZoomHack
 
         public static void Apply(Settings settings, int pid)
         {
+            if (string.Equals(settings.LastUpdate, "unupdated", StringComparison.Ordinal))
+            {
+                MessageBox.Show("Memory offsets need updating, click the update offsets button.");
+                return;
+            }
+
             using (var p = Process.GetProcessById(pid))
             {
                 var ptr = IntPtr.Zero;

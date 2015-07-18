@@ -2,10 +2,10 @@
 <Root>
   <DX9>
     <StructureAddress>ECC8D0</StructureAddress>
-    <ZoomCurrent>0</ZoomCurrent>
+    <ZoomCurrent>E8</ZoomCurrent>
     <ZoomMax>F0</ZoomMax>
-    <FovCurrent>0</FovCurrent>
-    <FovMax>0</FovMax>
+    <FovCurrent>F4</FovCurrent>
+    <FovMax>FC</FovMax>
   </DX9>
   <DX11>
     <StructureAddress>147F680</StructureAddress>
@@ -14,4 +14,5 @@
     <FovCurrent>104</FovCurrent>
     <FovMax>108</FovMax>
   </DX11>
+  <LastUpdate>2015-07-17 - patch 3.05</LastUpdate>
 </Root>
