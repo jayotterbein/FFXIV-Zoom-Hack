@@ -42,6 +42,7 @@
             this._processList = new System.Windows.Forms.ComboBox();
             this._updateOffsetsTextbox = new System.Windows.Forms.TextBox();
             this._updateOffsetsButton = new System.Windows.Forms.Button();
+            this._updateLocationDefault = new System.Windows.Forms.Button();
             this._zoomSettingsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._fovUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._zoomUpDown)).BeginInit();
@@ -213,7 +214,7 @@
             // 
             this._updateOffsetsTextbox.Location = new System.Drawing.Point(13, 13);
             this._updateOffsetsTextbox.Name = "_updateOffsetsTextbox";
-            this._updateOffsetsTextbox.Size = new System.Drawing.Size(385, 20);
+            this._updateOffsetsTextbox.Size = new System.Drawing.Size(306, 20);
             this._updateOffsetsTextbox.TabIndex = 3;
             // 
             // _updateOffsetsButton
@@ -226,11 +227,22 @@
             this._updateOffsetsButton.UseVisualStyleBackColor = true;
             this._updateOffsetsButton.Click += new System.EventHandler(this._updateOffsetsButton_Click);
             // 
+            // _updateLocationDefault
+            // 
+            this._updateLocationDefault.Location = new System.Drawing.Point(325, 14);
+            this._updateLocationDefault.Name = "_updateLocationDefault";
+            this._updateLocationDefault.Size = new System.Drawing.Size(75, 41);
+            this._updateLocationDefault.TabIndex = 10;
+            this._updateLocationDefault.Text = "Default";
+            this._updateLocationDefault.UseVisualStyleBackColor = true;
+            this._updateLocationDefault.Click += new System.EventHandler(this._updateLocationDefault_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(499, 271);
+            this.Controls.Add(this._updateLocationDefault);
             this.Controls.Add(this._updateOffsetsButton);
             this.Controls.Add(this._updateOffsetsTextbox);
             this.Controls.Add(this._processListBox);
@@ -267,6 +279,7 @@
         private System.Windows.Forms.ComboBox _processList;
         private System.Windows.Forms.TextBox _updateOffsetsTextbox;
         private System.Windows.Forms.Button _updateOffsetsButton;
+        private System.Windows.Forms.Button _updateLocationDefault;
     }
 }
 

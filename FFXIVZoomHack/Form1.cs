@@ -34,6 +34,8 @@ namespace FFXIVZoomHack
             _fovUpDown.Value = (decimal) Settings.DesiredFov;
             _fovUpDown.ValueChanged += NumberChanged;
 
+            _updateOffsetsTextbox.Text = Settings.OffsetUpdateLocation;
+
             _timer = new Timer(TimerCallback, null, TimeSpan.FromMilliseconds(100), Timeout.InfiniteTimeSpan);
         }
 
@@ -166,18 +168,53 @@ namespace FFXIVZoomHack
             ThreadPool.QueueUserWorkItem(
                 _ =>
                 {
-                    var offsets = Settings.Load(Settings.OffsetUpdateLocation);
-                    Settings.DX11_StructureAddress = offsets.DX11_StructureAddress;
-                    Settings.DX11_ZoomCurrent = offsets.DX11_ZoomCurrent;
-                    Settings.DX11_ZoomMax = offsets.DX11_ZoomMax;
-                    Settings.DX11_FovCurrent = offsets.DX11_FovCurrent;
-                    Settings.DX11_FovMax = offsets.DX11_FovMax;
-                    Settings.DX9_StructureAddress = offsets.DX9_StructureAddress;
-                    Settings.DX9_ZoomCurrent = offsets.DX9_ZoomCurrent;
-                    Settings.DX9_ZoomMax = offsets.DX9_ZoomMax;
-                    Settings.DX9_FovCurrent = offsets.DX9_FovCurrent;
-                    Settings.DX9_FovMax = offsets.DX9_FovMax;
+                    try
+                    {
+                        var offsets = Settings.Load(Settings.OffsetUpdateLocation);
+
+                        if (string.Equals(Settings.LastUpdate, offsets.LastUpdate))
+                        {
+                            MessageBox.Show("No new update found");
+                            return;
+                        }
+
+                        Settings.DX11_StructureAddress = offsets.DX11_StructureAddress;
+                        Settings.DX11_ZoomCurrent = offsets.DX11_ZoomCurrent;
+                        Settings.DX11_ZoomMax = offsets.DX11_ZoomMax;
+                        Settings.DX11_FovCurrent = offsets.DX11_FovCurrent;
+                        Settings.DX11_FovMax = offsets.DX11_FovMax;
+                        Settings.DX9_StructureAddress = offsets.DX9_StructureAddress;
+                        Settings.DX9_ZoomCurrent = offsets.DX9_ZoomCurrent;
+                        Settings.DX9_ZoomMax = offsets.DX9_ZoomMax;
+                        Settings.DX9_FovCurrent = offsets.DX9_FovCurrent;
+                        Settings.DX9_FovMax = offsets.DX9_FovMax;
+                        Settings.LastUpdate = offsets.LastUpdate;
+                        Settings.Save();
+
+                        if (Settings.AutoApply)
+                        {
+                            Invoke(() => ApplyChanges());
+                        }
+                        MessageBox.Show("Updated: " + Settings.LastUpdate);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error: " + ex);
+                    }
+                    finally
+                    {
+                        Invoke(() =>
+                               {
+                                   Cursor = Cursors.Default;
+                                   _updateOffsetsButton.Enabled = true;
+                               });
+                    }
                 });
+        }
+
+        private void _updateLocationDefault_Click(object sender, EventArgs e)
+        {
+            _updateOffsetsTextbox.Text = @"https://raw.githubusercontent.com/jayotterbein/FFXIV-Zoom-Hack/master/Offsets.xml";
         }
     }
 }

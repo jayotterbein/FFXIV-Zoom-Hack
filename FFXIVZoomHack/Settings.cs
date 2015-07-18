@@ -27,6 +27,7 @@ namespace FFXIVZoomHack
             DesiredFov = 0.78f;
 
             OffsetUpdateLocation = @"https://raw.githubusercontent.com/jayotterbein/FFXIV-Zoom-Hack/master/Offsets.xml";
+            LastUpdate = "2015-07-17 - patch 3.05";
         }
 
         private static string SettingsFile
@@ -59,6 +60,7 @@ namespace FFXIVZoomHack
         public int DX11_FovMax { get; set; }
 
         public string OffsetUpdateLocation { get; set; }
+        public string LastUpdate { get; set; }
 
         public static Settings Load(string location = null)
         {
@@ -104,6 +106,9 @@ namespace FFXIVZoomHack
                         case "DesiredFov":
                             settings.DesiredFov = float.Parse(element.Value);
                             break;
+                        case "LastUpdate":
+                            settings.LastUpdate = element.Value;
+                            break;
                     }
                 }
             }
@@ -136,7 +141,8 @@ namespace FFXIVZoomHack
                         ),
                     new XElement("DesiredZoom", DesiredZoom),
                     new XElement("DesiredFov", DesiredFov),
-                    new XElement("OffsetUpdateLocation", OffsetUpdateLocation)
+                    new XElement("OffsetUpdateLocation", OffsetUpdateLocation),
+                    new XElement("LastUpdate", LastUpdate)
                     )
                 );
 
