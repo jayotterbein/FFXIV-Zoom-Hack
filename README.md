@@ -10,6 +10,9 @@ CE can be downloaded here: http://www.cheatengine.org/downloads.php
 This guide assumes 6.5: http://www.cheatengine.org/download/CheatEngine65NoSetup.rar
 It should work with any version, but options may be named differently
 
+## Guide with pictures: https://jayotterbein.com/2016/03/13/hacking-ffxiv-zoom/
+
+## Quick guide if you're more familiar with CE
 1. In CE: File - Open process.  for DX9: ffxiv.exe, DX11: ffxiv_dx11.exe
 2. In game: Zoom all the way out, make sure there are no obstructions
 3. In CE: On the right side, change Value Type to Float.  Look for Value 20.0
