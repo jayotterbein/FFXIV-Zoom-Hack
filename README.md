@@ -3,7 +3,7 @@ Allow adjustment of camera zoom and field of vision beyond what the game normall
 
 Works for DX9 and DX11.
 
-You can use the source, or download (and extract) the included FFXIVZoomHack.7z file.
+You can use the source or download the latest release from here: https://github.com/jayotterbein/FFXIV-Zoom-Hack/releases/latest
 
 # Submitting updates to offsets after patch
 CE can be downloaded here: http://www.cheatengine.org/downloads.php
