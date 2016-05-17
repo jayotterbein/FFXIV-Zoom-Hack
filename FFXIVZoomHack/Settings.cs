@@ -74,30 +74,38 @@ namespace FFXIVZoomHack
                                 .Value
                                 .Split(',')
                                 .Where(x => !string.IsNullOrEmpty(x))
-                                .Select(x => int.Parse(x, NumberStyles.HexNumber))
+                                .Select(x => int.Parse(x, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
                                 .ToArray();
-                            settings.DX9_ZoomCurrent = int.Parse(element.Element("ZoomCurrent").Value, NumberStyles.HexNumber);
-                            settings.DX9_ZoomMax = int.Parse(element.Element("ZoomMax").Value, NumberStyles.HexNumber);
-                            settings.DX9_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber);
-                            settings.DX9_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber);
+                            settings.DX9_ZoomCurrent = int.Parse(element.Element("ZoomCurrent").Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                            settings.DX9_ZoomMax = int.Parse(element.Element("ZoomMax").Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                            settings.DX9_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                            settings.DX9_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                             break;
                         case "DX11":
                             settings.DX11_StructureAddress = element.Element("StructureAddress")
                                 .Value
                                 .Split(',')
                                 .Where(x => !string.IsNullOrEmpty(x))
-                                .Select(x => int.Parse(x, NumberStyles.HexNumber))
+                                .Select(x => int.Parse(x, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
                                 .ToArray();
-                            settings.DX11_ZoomCurrent = int.Parse(element.Element("ZoomCurrent").Value, NumberStyles.HexNumber);
-                            settings.DX11_ZoomMax = int.Parse(element.Element("ZoomMax").Value, NumberStyles.HexNumber);
-                            settings.DX11_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber);
-                            settings.DX11_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber);
+                            settings.DX11_ZoomCurrent = int.Parse(element.Element("ZoomCurrent").Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                            settings.DX11_ZoomMax = int.Parse(element.Element("ZoomMax").Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                            settings.DX11_FovCurrent = int.Parse(element.Element("FovCurrent").Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                            settings.DX11_FovMax = int.Parse(element.Element("FovMax").Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                             break;
                         case "DesiredZoom":
-                            settings.DesiredZoom = float.Parse(element.Value);
+                            settings.DesiredZoom = float.Parse(element.Value, CultureInfo.InvariantCulture);
+                            if (settings.DesiredZoom < 1f || settings.DesiredZoom > 1000f)
+                            {
+                                settings.DesiredZoom = 20f;
+                            }
                             break;
                         case "DesiredFov":
-                            settings.DesiredFov = float.Parse(element.Value);
+                            settings.DesiredFov = float.Parse(element.Value, CultureInfo.InvariantCulture);
+                            if (settings.DesiredFov < 0.01f || settings.DesiredFov > 3f)
+                            {
+                                settings.DesiredFov = 0.78f;
+                            }
                             break;
                         case "LastUpdate":
                             settings.LastUpdate = element.Value;
@@ -131,18 +139,18 @@ namespace FFXIVZoomHack
         private IEnumerable<XElement> GetSaveElements()
         {
             yield return new XElement("DX9",
-                new XElement("StructureAddress", string.Join(",", DX9_StructureAddress.Select(x => x.ToString("X")))),
-                new XElement("ZoomCurrent", DX9_ZoomCurrent.ToString("X")),
-                new XElement("ZoomMax", DX9_ZoomMax.ToString("X")),
-                new XElement("FovCurrent", DX9_FovCurrent.ToString("X")),
-                new XElement("FovMax", DX9_FovMax.ToString("X"))
+                new XElement("StructureAddress", string.Join(",", DX9_StructureAddress.Select(x => x.ToString("X", CultureInfo.InvariantCulture)))),
+                new XElement("ZoomCurrent", DX9_ZoomCurrent.ToString("X", CultureInfo.InvariantCulture)),
+                new XElement("ZoomMax", DX9_ZoomMax.ToString("X", CultureInfo.InvariantCulture)),
+                new XElement("FovCurrent", DX9_FovCurrent.ToString("X", CultureInfo.InvariantCulture)),
+                new XElement("FovMax", DX9_FovMax.ToString("X", CultureInfo.InvariantCulture))
                 );
             yield return new XElement("DX11",
-                new XElement("StructureAddress", string.Join(",", DX11_StructureAddress.Select(x => x.ToString("X")))),
-                new XElement("ZoomCurrent", DX11_ZoomCurrent.ToString("X")),
-                new XElement("ZoomMax", DX11_ZoomMax.ToString("X")),
-                new XElement("FovCurrent", DX11_FovCurrent.ToString("X")),
-                new XElement("FovMax", DX11_FovMax.ToString("X"))
+                new XElement("StructureAddress", string.Join(",", DX11_StructureAddress.Select(x => x.ToString("X", CultureInfo.InvariantCulture)))),
+                new XElement("ZoomCurrent", DX11_ZoomCurrent.ToString("X", CultureInfo.InvariantCulture)),
+                new XElement("ZoomMax", DX11_ZoomMax.ToString("X", CultureInfo.InvariantCulture)),
+                new XElement("FovCurrent", DX11_FovCurrent.ToString("X", CultureInfo.InvariantCulture)),
+                new XElement("FovMax", DX11_FovMax.ToString("X", CultureInfo.InvariantCulture))
                 );
             yield return new XElement("LastUpdate", LastUpdate);
 
@@ -150,9 +158,9 @@ namespace FFXIVZoomHack
             {
                 yield break;
             }
-            yield return new XElement("AutoApply", AutoApply);
-            yield return new XElement("DesiredZoom", DesiredZoom);
-            yield return new XElement("DesiredFov", DesiredFov);
+            yield return new XElement("AutoApply", AutoApply.ToString(CultureInfo.InvariantCulture));
+            yield return new XElement("DesiredZoom", DesiredZoom.ToString(CultureInfo.InvariantCulture));
+            yield return new XElement("DesiredFov", DesiredFov.ToString(CultureInfo.InvariantCulture));
             yield return new XElement("OffsetUpdateLocation", OffsetUpdateLocation);
         }
     }
