@@ -25,7 +25,7 @@ It should work with any version, but options may be named differently
 10. In CE:
   1. Select the instruction
   2. Look for the line which does the writing, it will have '<<' at the end
-  3. Look for the register and offset, you should see something like DX9: [ecx+000000F8], DX11: [rcx+00000000000000F8]
+  3. Look for the register and offset, you should see something like DX9: [ecx+000000F8], DX11: [r9+00000000000000F8] (note: it's been RCX before)
   4. Find the address in the register, at the bottom look for ECX=0125BB80.  Save this address, clipboard or notepad.
   5. Get back to the main CE window
 11. In CE: Click "New Scan", Value Type DX9: 4 Bytes, DX11: 8 Bytes, check Hex.  Search
