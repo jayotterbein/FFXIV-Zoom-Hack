@@ -11,7 +11,7 @@
     <StructureAddress>18FE120</StructureAddress>
     <ZoomCurrent>128</ZoomCurrent>
     <ZoomMax>130</ZoomMax>
-    <FovCurrent>134</FovCurrent>
+    <FovCurrent>128</FovCurrent>
     <FovMax>13C</FovMax>
   </DX11>
   <LastUpdate>2018-06-09 - patch 4.35 (DX11)</LastUpdate>
