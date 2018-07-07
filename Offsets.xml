@@ -2,8 +2,6 @@
 <Root>
   <DX9>
     <StructureAddress>11F2910</StructureAddress>
-    <StructureAddress>11F4084</StructureAddress>
-    <StructureAddress>11F4074</StructureAddress>
     <ZoomCurrent>108</ZoomCurrent>
     <ZoomMax>100</ZoomMax>
     <FovCurrent>104</FovCurrent>
