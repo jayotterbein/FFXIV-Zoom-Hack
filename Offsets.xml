@@ -6,7 +6,7 @@
     <ZoomMax>110</ZoomMax>
     <FovCurrent>114</FovCurrent>
     <FovMax>11C</FovMax>
-</DX9>
+  </DX9>
   <DX11>
     <StructureAddress>199C420</StructureAddress>
     <ZoomCurrent>118</ZoomCurrent>
