@@ -35,6 +35,15 @@ namespace FFXIVZoomHack
                 return;
             }
 
+            try
+            {
+                Process.EnterDebugMode();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Could not get debugging rights: " + ex.Message, ex);
+            }
+
             using (var p = Process.GetProcessById(pid))
             {
                 var ptr = IntPtr.Zero;
