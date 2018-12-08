@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 
 namespace FFXIVZoomHack
@@ -46,73 +47,71 @@ namespace FFXIVZoomHack
 
             using (var p = Process.GetProcessById(pid))
             {
-                var ptr = IntPtr.Zero;
+                var hProcess = IntPtr.Zero;
                 try
                 {
-                    ptr = OpenProcess(ProcessFlags, false, pid);
+                    hProcess = OpenProcess(ProcessFlags, false, pid);
                     if (string.Equals(p.ProcessName, "ffxiv", StringComparison.Ordinal))
                     {
-                        ApplyX86(settings, p, ptr);
+                        ApplyX86(settings, hProcess);
                     }
                     else if (string.Equals(p.ProcessName, "ffxiv_dx11", StringComparison.Ordinal))
                     {
-                        ApplyX64(settings, p, ptr);
+                        ApplyX64(settings, hProcess);
                     }
                 }
                 finally
                 {
-                    if (ptr != IntPtr.Zero)
+                    if (hProcess != IntPtr.Zero)
                     {
-                        CloseHandle(ptr);
+                        CloseHandle(hProcess);
                     }
                 }
             }
         }
 
-        private static void ApplyX86(Settings settings, Process process, IntPtr ptr)
+        private static void ApplyX86(Settings settings, IntPtr hProcess)
         {
-            var addr = GetAddress(4, process, ptr, settings.DX9_StructureAddress, settings.DX9_ZoomMax);
-            Write(settings.DesiredZoom, ptr, addr);
-            addr = GetAddress(4, process, ptr, settings.DX9_StructureAddress, settings.DX9_ZoomCurrent);
-            Write(settings.DesiredZoom, ptr, addr);
+            var addr = GetAddress(4, hProcess, settings.DX9_StructureAddress, settings.DX9_ZoomMax);
+            Write(settings.DesiredZoom, hProcess, addr);
+            addr = GetAddress(4, hProcess, settings.DX9_StructureAddress, settings.DX9_ZoomCurrent);
+            Write(settings.DesiredZoom, hProcess, addr);
 
-            addr = GetAddress(4, process, ptr, settings.DX9_StructureAddress, settings.DX9_FovCurrent);
-            Write(settings.DesiredFov, ptr, addr);
-            addr = GetAddress(4, process, ptr, settings.DX9_StructureAddress, settings.DX9_FovMax);
-            Write(settings.DesiredFov, ptr, addr);
+            addr = GetAddress(4, hProcess, settings.DX9_StructureAddress, settings.DX9_FovCurrent);
+            Write(settings.DesiredFov, hProcess, addr);
+            addr = GetAddress(4, hProcess, settings.DX9_StructureAddress, settings.DX9_FovMax);
+            Write(settings.DesiredFov, hProcess, addr);
         }
 
-        private static void ApplyX64(Settings settings, Process process, IntPtr ptr)
+        private static void ApplyX64(Settings settings, IntPtr hProcess)
         {
-            var addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_ZoomMax);
-            Write(settings.DesiredZoom, ptr, addr);
-            addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_ZoomCurrent);
-            Write(settings.DesiredZoom, ptr, addr);
+            var addr = GetAddress(8, hProcess, settings.DX11_StructureAddress, settings.DX11_ZoomMax);
+            Write(settings.DesiredZoom, hProcess, addr);
+            addr = GetAddress(8, hProcess, settings.DX11_StructureAddress, settings.DX11_ZoomCurrent);
+            Write(settings.DesiredZoom, hProcess, addr);
 
-            addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_FovCurrent);
-            Write(settings.DesiredFov, ptr, addr);
-            addr = GetAddress(8, process, ptr, settings.DX11_StructureAddress, settings.DX11_FovMax);
-            Write(settings.DesiredFov, ptr, addr);
+            addr = GetAddress(8, hProcess, settings.DX11_StructureAddress, settings.DX11_FovCurrent);
+            Write(settings.DesiredFov, hProcess, addr);
+            addr = GetAddress(8, hProcess, settings.DX11_StructureAddress, settings.DX11_FovMax);
+            Write(settings.DesiredFov, hProcess, addr);
         }
 
-        private static void Write(float value, IntPtr handle, IntPtr address)
+        private static void Write(float value, IntPtr hProcess, IntPtr address)
         {
             var buffer = BitConverter.GetBytes(value);
-            IntPtr written;
-            if (!(WriteProcessMemory(handle, address, buffer, buffer.Length, out written)))
+            if (!WriteProcessMemory(hProcess, address, buffer, buffer.Length, out var written))
             {
                 throw new Exception("Could not write process memory: " + Marshal.GetLastWin32Error());
             }
         }
 
-        private static IntPtr GetAddress(byte size, Process process, IntPtr ptr, IEnumerable<int> offsets, int finalOffset)
+        private static IntPtr GetAddress(byte size, IntPtr hProcess, IEnumerable<int> offsets, int finalOffset)
         {
-            var addr = process.MainModule.BaseAddress;
+            var addr = GetBaseAddress(hProcess);
             var buffer = new byte[size];
             foreach (var offset in offsets)
             {
-                IntPtr read;
-                if (!(ReadProcessMemory(ptr, IntPtr.Add(addr, offset), buffer, buffer.Length, out read)))
+                if (!ReadProcessMemory(hProcess, IntPtr.Add(addr, offset), buffer, buffer.Length, out var read))
                 {
                     throw new Exception("Unable to read process memory");
                 }
@@ -121,6 +120,55 @@ namespace FFXIVZoomHack
                     : new IntPtr(BitConverter.ToInt32(buffer, 0));
             }
             return IntPtr.Add(addr, finalOffset);
+        }
+
+        private static IntPtr GetBaseAddress(IntPtr hProcess)
+        {
+            var hModules = new IntPtr[1024];
+            var uiSize = (uint) (Marshal.SizeOf(typeof(IntPtr)) * hModules.Length);
+            var gch = GCHandle.Alloc(hModules, GCHandleType.Pinned);
+            try
+            {
+                var pModules = gch.AddrOfPinnedObject();
+                if (EnumProcessModules(hProcess, pModules, uiSize, out var cbNeeded) != 1)
+                {
+                    throw new Exception("Could not enumerate modules: " + Marshal.GetLastWin32Error());
+                }
+
+                var mainModule = IntPtr.Zero;
+                var modulesLoaded = (int) (cbNeeded / Marshal.SizeOf(typeof(IntPtr)));
+                for (var i = 0; i < modulesLoaded; i++)
+                {
+                    var moduleFilenameBuilder = new StringBuilder(1024);
+                    if (GetModuleFileNameEx(hProcess, hModules[i], moduleFilenameBuilder, moduleFilenameBuilder.Capacity) == 0)
+                    {
+                        throw new Exception("Could not get module filename: " + Marshal.GetLastWin32Error());
+                    }
+
+                    var moduleFilename = moduleFilenameBuilder.ToString();
+                    if (!string.IsNullOrEmpty(moduleFilename) && moduleFilename.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        mainModule = hModules[i];
+                        break;
+                    }
+                }
+
+                if (mainModule == IntPtr.Zero)
+                {
+                    throw new Exception("Could not find module for executable");
+                }
+
+                if (!GetModuleInformation(hProcess, mainModule, out var moduleInfo, (uint) Marshal.SizeOf<ModuleInfo>()))
+                {
+                    throw new Exception("Could not get module information from process" + Marshal.GetLastWin32Error());
+                }
+
+                return moduleInfo.lpBaseOfDll;
+            }
+            finally
+            {
+                gch.Free();
+            }
         }
 
         [DllImport("kernel32.dll")]
@@ -135,6 +183,23 @@ namespace FFXIVZoomHack
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle(IntPtr hObject);
+
+        [DllImport("psapi.dll", SetLastError = true)]
+        private static extern bool GetModuleInformation(IntPtr hProcess, IntPtr hModule, out ModuleInfo lpmodinfo, uint cb);
+
+        [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        private static extern int EnumProcessModules(IntPtr hProcess, [Out] IntPtr lphModule, uint cb, out uint lpcbNeeded);
+
+        [DllImport("psapi.dll", SetLastError = true)]
+        private static extern int GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, StringBuilder lpFilename, int nSize);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct ModuleInfo
+        {
+             public IntPtr lpBaseOfDll;
+             public uint SizeOfImage;
+             public IntPtr EntryPoint;
+        }
 
         [Flags]
         private enum ProcessAccessFlags : uint
