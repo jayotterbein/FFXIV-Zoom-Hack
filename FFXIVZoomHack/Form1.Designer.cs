@@ -283,6 +283,7 @@
 
         private System.Windows.Forms.CheckBox _autoApplyCheckbox;
         private System.Windows.Forms.CheckBox _autoQuitCheckbox;
+        private System.Windows.Forms.ToolTip autoQuitTooltip;
         private System.Windows.Forms.GroupBox _zoomSettingsBox;
         private System.Windows.Forms.GroupBox _processListBox;
         private System.Windows.Forms.Label _fovLabel;
@@ -297,7 +298,6 @@
         private System.Windows.Forms.TextBox _updateOffsetsTextbox;
         private System.Windows.Forms.Button _updateOffsetsButton;
         private System.Windows.Forms.Button _updateLocationDefault;
-        private System.Windows.Forms.ToolTip autoQuitTooltip;
     }
 }
 

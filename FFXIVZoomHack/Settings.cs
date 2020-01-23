@@ -15,6 +15,7 @@ namespace FFXIVZoomHack
         private Settings()
         {
             AutoApply = true;
+            AutoQuit = false;
 
             DesiredZoom = 20;
             DesiredFov = 0.78f;
@@ -37,6 +38,7 @@ namespace FFXIVZoomHack
         }
 
         public bool AutoApply { get; set; }
+        public bool AutoQuit { get; set; }
         public float DesiredFov { get; set; }
         public float DesiredZoom { get; set; }
 
@@ -68,6 +70,9 @@ namespace FFXIVZoomHack
                     {
                         case "AutoApply":
                             settings.AutoApply = bool.Parse(element.Value);
+                            break;
+                        case "AutoQuit":
+                            settings.AutoQuit = bool.Parse(element.Value);
                             break;
                         case "DX9":
                             settings.DX9_StructureAddress = element.Element("StructureAddress")
@@ -159,6 +164,7 @@ namespace FFXIVZoomHack
                 yield break;
             }
             yield return new XElement("AutoApply", AutoApply.ToString(CultureInfo.InvariantCulture));
+            yield return new XElement("AutoQuit", AutoQuit.ToString(CultureInfo.InvariantCulture));
             yield return new XElement("DesiredZoom", DesiredZoom.ToString(CultureInfo.InvariantCulture));
             yield return new XElement("DesiredFov", DesiredFov.ToString(CultureInfo.InvariantCulture));
             yield return new XElement("OffsetUpdateLocation", OffsetUpdateLocation);
