@@ -45,7 +45,7 @@
             this._updateOffsetsTextbox = new System.Windows.Forms.TextBox();
             this._updateOffsetsButton = new System.Windows.Forms.Button();
             this._updateLocationDefault = new System.Windows.Forms.Button();
-            this.autoQuitTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this._autoQuitTooltip = new System.Windows.Forms.ToolTip(this.components);
             this._zoomSettingsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._fovUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._zoomUpDown)).BeginInit();
@@ -195,7 +195,7 @@
             this._autoQuitCheckbox.Size = new System.Drawing.Size(217, 24);
             this._autoQuitCheckbox.TabIndex = 11;
             this._autoQuitCheckbox.Text = "Quit when processes close";
-            this.autoQuitTooltip.SetToolTip(this._autoQuitCheckbox, "Automatically close FFXIV Zoom Hack after \r\npreviously detected instances of FFXI" +
+            this._autoQuitTooltip.SetToolTip(this._autoQuitCheckbox, "Automatically close FFXIV Zoom Hack after \r\npreviously detected instances of FFXI" +
         "V are closed");
             this._autoQuitCheckbox.UseVisualStyleBackColor = true;
             // 
@@ -283,7 +283,7 @@
 
         private System.Windows.Forms.CheckBox _autoApplyCheckbox;
         private System.Windows.Forms.CheckBox _autoQuitCheckbox;
-        private System.Windows.Forms.ToolTip autoQuitTooltip;
+        private System.Windows.Forms.ToolTip _autoQuitTooltip;
         private System.Windows.Forms.GroupBox _zoomSettingsBox;
         private System.Windows.Forms.GroupBox _processListBox;
         private System.Windows.Forms.Label _fovLabel;
