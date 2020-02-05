@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this._autoApplyCheckbox = new System.Windows.Forms.CheckBox();
             this._zoomSettingsBox = new System.Windows.Forms.GroupBox();
             this._fovUpDown = new System.Windows.Forms.NumericUpDown();
@@ -37,12 +38,14 @@
             this._fovLabel = new System.Windows.Forms.Label();
             this._zoomLabel = new System.Windows.Forms.Label();
             this._processListBox = new System.Windows.Forms.GroupBox();
+            this._autoQuitCheckbox = new System.Windows.Forms.CheckBox();
             this._gotoProcessButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this._processList = new System.Windows.Forms.ComboBox();
             this._updateOffsetsTextbox = new System.Windows.Forms.TextBox();
             this._updateOffsetsButton = new System.Windows.Forms.Button();
             this._updateLocationDefault = new System.Windows.Forms.Button();
+            this._autoQuitTooltip = new System.Windows.Forms.ToolTip(this.components);
             this._zoomSettingsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._fovUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._zoomUpDown)).BeginInit();
@@ -53,7 +56,7 @@
             // 
             this._autoApplyCheckbox.AutoSize = true;
             this._autoApplyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._autoApplyCheckbox.Location = new System.Drawing.Point(6, 25);
+            this._autoApplyCheckbox.Location = new System.Drawing.Point(10, 25);
             this._autoApplyCheckbox.Name = "_autoApplyCheckbox";
             this._autoApplyCheckbox.Size = new System.Drawing.Size(219, 24);
             this._autoApplyCheckbox.TabIndex = 0;
@@ -171,6 +174,7 @@
             // 
             this._processListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this._processListBox.Controls.Add(this._autoQuitCheckbox);
             this._processListBox.Controls.Add(this._gotoProcessButton);
             this._processListBox.Controls.Add(this.label1);
             this._processListBox.Controls.Add(this._processList);
@@ -182,6 +186,18 @@
             this._processListBox.TabIndex = 2;
             this._processListBox.TabStop = false;
             this._processListBox.Text = "Processes";
+            // 
+            // _autoQuitCheckbox
+            // 
+            this._autoQuitCheckbox.AutoSize = true;
+            this._autoQuitCheckbox.Location = new System.Drawing.Point(243, 25);
+            this._autoQuitCheckbox.Name = "_autoQuitCheckbox";
+            this._autoQuitCheckbox.Size = new System.Drawing.Size(217, 24);
+            this._autoQuitCheckbox.TabIndex = 11;
+            this._autoQuitCheckbox.Text = "Quit when processes close";
+            this._autoQuitTooltip.SetToolTip(this._autoQuitCheckbox, "Automatically close FFXIV Zoom Hack after \r\npreviously detected instances of FFXI" +
+        "V are closed");
+            this._autoQuitCheckbox.UseVisualStyleBackColor = true;
             // 
             // _gotoProcessButton
             // 
@@ -219,9 +235,9 @@
             // 
             // _updateOffsetsButton
             // 
-            this._updateOffsetsButton.Location = new System.Drawing.Point(404, 12);
+            this._updateOffsetsButton.Location = new System.Drawing.Point(404, 13);
             this._updateOffsetsButton.Name = "_updateOffsetsButton";
-            this._updateOffsetsButton.Size = new System.Drawing.Size(83, 43);
+            this._updateOffsetsButton.Size = new System.Drawing.Size(83, 42);
             this._updateOffsetsButton.TabIndex = 9;
             this._updateOffsetsButton.Text = "Update Offsets";
             this._updateOffsetsButton.UseVisualStyleBackColor = true;
@@ -229,11 +245,11 @@
             // 
             // _updateLocationDefault
             // 
-            this._updateLocationDefault.Location = new System.Drawing.Point(325, 14);
+            this._updateLocationDefault.Location = new System.Drawing.Point(325, 13);
             this._updateLocationDefault.Name = "_updateLocationDefault";
-            this._updateLocationDefault.Size = new System.Drawing.Size(75, 41);
+            this._updateLocationDefault.Size = new System.Drawing.Size(75, 42);
             this._updateLocationDefault.TabIndex = 10;
-            this._updateLocationDefault.Text = "Default";
+            this._updateLocationDefault.Text = "Default\r\nURL";
             this._updateLocationDefault.UseVisualStyleBackColor = true;
             this._updateLocationDefault.Click += new System.EventHandler(this._updateLocationDefault_Click);
             // 
@@ -266,6 +282,8 @@
         #endregion
 
         private System.Windows.Forms.CheckBox _autoApplyCheckbox;
+        private System.Windows.Forms.CheckBox _autoQuitCheckbox;
+        private System.Windows.Forms.ToolTip _autoQuitTooltip;
         private System.Windows.Forms.GroupBox _zoomSettingsBox;
         private System.Windows.Forms.GroupBox _processListBox;
         private System.Windows.Forms.Label _fovLabel;

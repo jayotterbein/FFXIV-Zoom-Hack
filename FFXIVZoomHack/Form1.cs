@@ -29,6 +29,9 @@ namespace FFXIVZoomHack
             _autoApplyCheckbox.Checked = Settings.AutoApply;
             _autoApplyCheckbox.CheckedChanged += AutoApplyCheckChanged;
 
+            _autoQuitCheckbox.Checked = Settings.AutoQuit;
+            _autoQuitCheckbox.CheckedChanged += AutoQuitCheckChanged;
+
             _zoomUpDown.Value = (decimal) Settings.DesiredZoom;
             _zoomUpDown.ValueChanged += NumberChanged;
             _fovUpDown.Value = (decimal) Settings.DesiredFov;
@@ -57,6 +60,7 @@ namespace FFXIVZoomHack
                         var activePids = Memory.GetPids()
                             .ToArray();
                         var knownPids = GetCurrentPids();
+
                         foreach (var pid in activePids.Except(knownPids))
                         {
                             _processList.Items.Add(pid);
@@ -84,6 +88,11 @@ namespace FFXIVZoomHack
                             {
                                 ApplyChanges(newPids);
                             }
+                        }
+
+                        if (activePids.Count() == 0 && knownPids.Count() > 0 && _autoQuitCheckbox.Checked == true)
+                        {
+                            Application.Exit();
                         }
                     });
             }
@@ -115,6 +124,16 @@ namespace FFXIVZoomHack
             Settings.AutoApply = !Settings.AutoApply;
             Settings.Save();
             if (Settings.AutoApply)
+            {
+                ApplyChanges();
+            }
+        }
+
+        private void AutoQuitCheckChanged(object sender, EventArgs e)
+        {
+            Settings.AutoQuit = !Settings.AutoQuit;
+            Settings.Save();
+            if (Settings.AutoQuit)
             {
                 ApplyChanges();
             }
