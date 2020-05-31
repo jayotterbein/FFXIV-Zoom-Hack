@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Root>
   <DX9>
-    <StructureAddress>132E610</StructureAddress>
-    <ZoomCurrent>f8</ZoomCurrent>
-    <ZoomMax>100</ZoomMax>
-    <FovCurrent>104</FovCurrent>
-    <FovMax>10C</FovMax>
+    <StructureAddress>147F410</StructureAddress>
+    <ZoomCurrent>f4</ZoomCurrent>
+    <ZoomMax>fc</ZoomMax>
+    <FovCurrent>100</FovCurrent>
+    <FovMax>108</FovMax>
   </DX9>
   <DX11>
     <StructureAddress>1C63F80</StructureAddress>
@@ -14,5 +14,5 @@
     <FovCurrent>120</FovCurrent>
     <FovMax>128</FovMax>
   </DX11>
-  <LastUpdate>2020-4-07 - patch 5.25 (DX11)</LastUpdate>
+  <LastUpdate>2020-5-31 - patch 5.25 (DX11/DX9)</LastUpdate>
 </Root>
