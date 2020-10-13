@@ -8,11 +8,11 @@
     <FovMax>108</FovMax>
   </DX9>
   <DX11>
-    <StructureAddress>1D09BA0</StructureAddress>
+    <StructureAddress>1D0AC20</StructureAddress>
     <ZoomCurrent>114</ZoomCurrent>
     <ZoomMax>11c</ZoomMax>
     <FovCurrent>120</FovCurrent>
     <FovMax>128</FovMax>
   </DX11>
-  <LastUpdate>2020-9-8 - patch 5.31 (DX11/DX9)</LastUpdate>
+  <LastUpdate>2020-10-13 - patch 5.5 (DX11/DX9)</LastUpdate>
 </Root>
