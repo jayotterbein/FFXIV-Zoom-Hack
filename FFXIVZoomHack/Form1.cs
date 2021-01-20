@@ -196,6 +196,12 @@ namespace FFXIVZoomHack
                             return;
                         }
 
+                        if (offsets.DX11_StructureAddress?.Any() != true || offsets.DX9_StructureAddress?.Any() != true)
+                        {
+                            MessageBox.Show($"Problem parsing the updates from {Settings.OffsetUpdateLocation}");
+                            return;
+                        }
+
                         Settings.DX11_StructureAddress = offsets.DX11_StructureAddress;
                         Settings.DX11_ZoomCurrent = offsets.DX11_ZoomCurrent;
                         Settings.DX11_ZoomMax = offsets.DX11_ZoomMax;
