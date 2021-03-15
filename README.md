@@ -5,12 +5,16 @@ Works for DX9 and DX11.
 
 You can use the source or download the latest release from here: https://github.com/jayotterbein/FFXIV-Zoom-Hack/releases/latest
 
+# Dalamud plugin
+
+https://github.com/daemitus/CameraPlugin
+
+I am not associated with that project at all.
+
 # Submitting updates to offsets after patch
 CE can be downloaded here: http://www.cheatengine.org/downloads.php
 This guide assumes 6.5: http://www.cheatengine.org/download/CheatEngine65NoSetup.rar
 It should work with any version, but options may be named differently
-
-## Guide with pictures: https://jayotterbein.com/2016/03/13/hacking-ffxiv-zoom/
 
 ## Quick guide if you're more familiar with CE
 1. In CE: File - Open process.  for DX9: ffxiv.exe, DX11: ffxiv_dx11.exe
