@@ -255,6 +255,8 @@ namespace FFXIVZoomHack
                     File.Delete(file);
                 }
 
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                 using (var webClient = new WebClient())
                 {
                     webClient.DownloadFile(url, file);
