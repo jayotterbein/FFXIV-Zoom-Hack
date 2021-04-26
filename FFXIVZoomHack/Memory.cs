@@ -51,11 +51,7 @@ namespace FFXIVZoomHack
                 try
                 {
                     hProcess = OpenProcess(ProcessFlags, false, pid);
-                    if (string.Equals(p.ProcessName, "ffxiv", StringComparison.Ordinal))
-                    {
-                        ApplyX86(settings, hProcess);
-                    }
-                    else if (string.Equals(p.ProcessName, "ffxiv_dx11", StringComparison.Ordinal))
+                    if (string.Equals(p.ProcessName, "ffxiv_dx11", StringComparison.Ordinal))
                     {
                         ApplyX64(settings, hProcess);
                     }
@@ -68,19 +64,6 @@ namespace FFXIVZoomHack
                     }
                 }
             }
-        }
-
-        private static void ApplyX86(Settings settings, IntPtr hProcess)
-        {
-            var addr = GetAddress(4, hProcess, settings.DX9_StructureAddress, settings.DX9_ZoomMax);
-            Write(settings.DesiredZoom, hProcess, addr);
-            addr = GetAddress(4, hProcess, settings.DX9_StructureAddress, settings.DX9_ZoomCurrent);
-            Write(settings.DesiredZoom, hProcess, addr);
-
-            addr = GetAddress(4, hProcess, settings.DX9_StructureAddress, settings.DX9_FovCurrent);
-            Write(settings.DesiredFov, hProcess, addr);
-            addr = GetAddress(4, hProcess, settings.DX9_StructureAddress, settings.DX9_FovMax);
-            Write(settings.DesiredFov, hProcess, addr);
         }
 
         private static void ApplyX64(Settings settings, IntPtr hProcess)

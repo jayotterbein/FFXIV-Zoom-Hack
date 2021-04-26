@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -188,7 +191,13 @@ namespace FFXIVZoomHack
                 {
                     try
                     {
-                        var offsets = Settings.Load(Settings.OffsetUpdateLocation);
+                        var offsets = File.Exists(Settings.OffsetUpdateLocation)
+                            ? Settings.Load(Settings.OffsetUpdateLocation)
+                            : LoadSettingsFromRemote(Settings.OffsetUpdateLocation);
+                        if (offsets == null)
+                        {
+                            return;
+                        }
 
                         if (string.Equals(Settings.LastUpdate, offsets.LastUpdate))
                         {
@@ -196,7 +205,7 @@ namespace FFXIVZoomHack
                             return;
                         }
 
-                        if (offsets.DX11_StructureAddress?.Any() != true || offsets.DX9_StructureAddress?.Any() != true)
+                        if (offsets.DX11_StructureAddress?.Any() != true)
                         {
                             MessageBox.Show($"Problem parsing the updates from {Settings.OffsetUpdateLocation}");
                             return;
@@ -207,11 +216,6 @@ namespace FFXIVZoomHack
                         Settings.DX11_ZoomMax = offsets.DX11_ZoomMax;
                         Settings.DX11_FovCurrent = offsets.DX11_FovCurrent;
                         Settings.DX11_FovMax = offsets.DX11_FovMax;
-                        Settings.DX9_StructureAddress = offsets.DX9_StructureAddress;
-                        Settings.DX9_ZoomCurrent = offsets.DX9_ZoomCurrent;
-                        Settings.DX9_ZoomMax = offsets.DX9_ZoomMax;
-                        Settings.DX9_FovCurrent = offsets.DX9_FovCurrent;
-                        Settings.DX9_FovMax = offsets.DX9_FovMax;
                         Settings.LastUpdate = offsets.LastUpdate;
                         Settings.Save();
 
@@ -239,6 +243,38 @@ namespace FFXIVZoomHack
         private void _updateLocationDefault_Click(object sender, EventArgs e)
         {
             _updateOffsetsTextbox.Text = @"https://raw.githubusercontent.com/jayotterbein/FFXIV-Zoom-Hack/master/Offsets.xml";
+        }
+
+        private static Settings LoadSettingsFromRemote(string url)
+        {
+            var file = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():n}.xml");
+            try
+            {
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
+
+                using (var webClient = new WebClient())
+                {
+                    webClient.DownloadFile(url, file);
+                }
+
+                return Settings.Load(file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Problem downloading updates from {url}", ex.Message);
+                return null;
+            }
+            finally
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch { /* ignore io errors deleting a temp file which might not exist */ }
+            }
         }
     }
 }
