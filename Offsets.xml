@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Root>
-  <DX9>
-    <StructureAddress>132E610</StructureAddress>
-    <ZoomCurrent>f8</ZoomCurrent>
-    <ZoomMax>100</ZoomMax>
-    <FovCurrent>104</FovCurrent>
-    <FovMax>10C</FovMax>
-  </DX9>
   <DX11>
     <StructureAddress>1DBFF70</StructureAddress>
     <ZoomCurrent>114</ZoomCurrent>
@@ -14,5 +7,5 @@
     <FovCurrent>120</FovCurrent>
     <FovMax>128</FovMax>
   </DX11>
-  <LastUpdate>2021-06-22 - patch 5.57 (DX11)</LastUpdate>
+  <LastUpdate>2021-06-22 - patch 5.57</LastUpdate>
 </Root>
