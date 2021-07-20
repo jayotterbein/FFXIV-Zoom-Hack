@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Root>
   <DX11>
-    <StructureAddress>1DBFF70</StructureAddress>
+    <StructureAddress>1DB7F70</StructureAddress>
     <ZoomCurrent>114</ZoomCurrent>
     <ZoomMax>11c</ZoomMax>
     <FovCurrent>120</FovCurrent>
