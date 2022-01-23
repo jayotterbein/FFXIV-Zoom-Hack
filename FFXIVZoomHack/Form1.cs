@@ -1,24 +1,41 @@
-﻿using System;
+﻿using FFXIVZoomHack.Properties;
+using ProcessMemoryApi;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Timer = System.Threading.Timer;
-
 namespace FFXIVZoomHack
 {
+    public struct ProcessModuleAddress
+    {
+        public long pBaseOffset;
+        public long pModule;
+    }
+
     public partial class Form1 : Form
     {
+        [DllImport("USER32.DLL")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
         private static readonly Lazy<Settings> LazySettings = new Lazy<Settings>(() => Settings.Load());
-        private Timer _timer;
+
+        Dictionary<ProcessMemoryReader, ProcessModuleAddress> ProcessCollection;
+
+        //DX11 Only
+        const long pCurrentZoom = 0x114;
+        const long pMinZoom = 0x118;
+        const long pMaxZoom = 0x11C;
+        const long pCurrentFOV = 0x120;
+        const long pMinFOV = 0x124;
+        const long pMaxFOV = 0x128;
 
         public Form1()
         {
+            ProcessCollection = new Dictionary<ProcessMemoryReader, ProcessModuleAddress>();
             InitializeComponent();
         }
 
@@ -29,104 +46,117 @@ namespace FFXIVZoomHack
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _autoApplyCheckbox.Checked = Settings.AutoApply;
-            _autoApplyCheckbox.CheckedChanged += AutoApplyCheckChanged;
+            //just need call once
+            Settings settings = Settings;
+            _autoApplyCheckbox.Checked = settings.AutoApply;
+            _autoQuitCheckbox.Checked = settings.AutoQuit;
+            _zoomUpDown.Value = (decimal)settings.DesiredZoom;
+            _fovUpDown.Value = (decimal)settings.DesiredFov;
 
-            _autoQuitCheckbox.Checked = Settings.AutoQuit;
-            _autoQuitCheckbox.CheckedChanged += AutoQuitCheckChanged;
-
-            _zoomUpDown.Value = (decimal) Settings.DesiredZoom;
-            _zoomUpDown.ValueChanged += NumberChanged;
-            _fovUpDown.Value = (decimal) Settings.DesiredFov;
-            _fovUpDown.ValueChanged += NumberChanged;
-
-            _updateOffsetsTextbox.Text = Settings.OffsetUpdateLocation;
-
-            _timer = new Timer(TimerCallback, null, TimeSpan.FromMilliseconds(100), Timeout.InfiniteTimeSpan);
         }
 
         private void NumberChanged(object sender, EventArgs e)
         {
-            Settings.DesiredZoom = (float) _zoomUpDown.Value;
-            Settings.DesiredFov = (float) _fovUpDown.Value;
-            Settings.Save();
+            Settings settings = Settings;
+            settings.DesiredZoom = (float)_zoomUpDown.Value;
+            settings.DesiredFov = (float)_fovUpDown.Value;
+            settings.Save();
             ApplyChanges();
         }
 
-        private void TimerCallback(object state)
+        private void Timer1Tick(object sender, EventArgs args)
         {
+            ReadyIndicator.Image = ProcessCollection.Count == 0 ? Resources.RedLight : Resources.GreenLight;
+
             try
             {
-                Invoke(
-                    () =>
+                List<int> activePids = Process.GetProcessesByName("ffxiv_dx11").ToList().Select(x => x.Id).ToList();
+
+                for (int i = 0; i < activePids.Count; i++)
+                {
+                    //Add new process
+                    if (!ProcessCollection.Keys.Select(x => x.process.Id).Contains(activePids[i]))
                     {
-                        var activePids = Memory.GetPids()
-                            .ToArray();
-                        var knownPids = GetCurrentPids();
+                        ProcessMemoryReader mReader = new ProcessMemoryReader(activePids[i]);
+                        ProcessModuleAddress module = new ProcessModuleAddress();
+                        module.pBaseOffset = (long)mReader.ScanPtrBySig("48833D********007411488B0D********4885C97405E8********488D0D")[0];
+                        module.pModule = mReader.ReadInt64((IntPtr)((long)mReader.process.Modules[0].BaseAddress + module.pBaseOffset));
+                        ProcessCollection.Add(mReader, module);
+                    }
+                    //update combo box
+                    try
+                    {
+                        _processList.Items[i] = activePids[i];
+                    }
+                    catch
+                    {
+                        _processList.Items.Add(activePids[i]);
+                    }
+                }
 
-                        foreach (var pid in activePids.Except(knownPids))
-                        {
-                            _processList.Items.Add(pid);
-                        }
+                //delete closed process
+                foreach (ProcessMemoryReader mReader in ProcessCollection.Keys)
+                {
+                    if (!activePids.Contains(mReader.process.Id))
+                    {
+                        ProcessCollection.Remove(mReader);
+                    }
+                }
 
-                        for (var i = _processList.Items.Count - 1; i >= 0; i--)
-                        {
-                            var pid = (int) _processList.Items[i];
-                            if (!activePids.Contains(pid))
-                            {
-                                _processList.Items.RemoveAt(i);
-                            }
-                        }
+                //clear combo box
+                while (true)
+                {
+                    if (_processList.Items.Count == activePids.Count) break;
+                    else _processList.Items.RemoveAt(_processList.Items.Count - 1);
+                }
 
-                        if (_processList.Items.Count > 0 && _processList.SelectedItem == null)
-                        {
-                            _processList.SelectedIndex = 0;
-                        }
+                if (_processList.Items.Count > 0 && _processList.SelectedItem == null)
+                {
+                    _processList.SelectedIndex = 0;
+                }
 
-                        if (Settings.AutoApply)
-                        {
-                            var newPids = activePids.Except(knownPids)
-                                .ToArray();
-                            if (newPids.Any())
-                            {
-                                ApplyChanges(newPids);
-                            }
-                        }
+                if (Settings.AutoApply)
+                {
+                    ApplyChanges();
+                }
 
-                        if (activePids.Count() == 0 && knownPids.Count() > 0 && _autoQuitCheckbox.Checked == true)
-                        {
-                            Application.Exit();
-                        }
-                    });
+                if (activePids.Count() == 0 && _autoQuitCheckbox.Checked)
+                {
+                    Close();
+                }
+
             }
-            catch
+            catch (Exception ex)
             {
-                /* something went wrong on the background thread, should find a way to log this..*/
-            }
-            finally
-            {
-                _timer.Change(TimeSpan.FromSeconds(5), Timeout.InfiniteTimeSpan);
+                using (var sw = File.AppendText(new FileInfo(Application.ExecutablePath).Directory.ToString() + @"\log.txt"))
+                {
+                    sw.WriteLine(ex.Message);
+                }
             }
         }
 
-        private IReadOnlyCollection<int> GetCurrentPids()
+        private void ApplyChanges()
         {
-            return _processList.Items.Cast<int>().ToArray();
-        }
+            byte[] ZoomBytes = BitConverter.GetBytes(Convert.ToSingle(_zoomUpDown.Value));
+            byte[] FOVBytes = BitConverter.GetBytes(Convert.ToSingle(_fovUpDown.Value));
 
-        private void ApplyChanges(IEnumerable<int> pids = null)
-        {
-            foreach (var pid in (pids ?? GetCurrentPids()))
-            {
-                Memory.Apply(Settings, pid);
-            }
+            var result = Parallel.ForEach(ProcessCollection.Keys, (mReader) => {
+                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pMinZoom), BitConverter.GetBytes(Convert.ToSingle(0.01)));
+                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pMaxZoom), ZoomBytes);
+
+                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pMinFOV), BitConverter.GetBytes(Convert.ToSingle(0.01)));
+                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pMaxFOV), FOVBytes);
+                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pCurrentFOV), FOVBytes);
+            });
         }
 
         private void AutoApplyCheckChanged(object sender, EventArgs e)
         {
-            Settings.AutoApply = !Settings.AutoApply;
-            Settings.Save();
-            if (Settings.AutoApply)
+            Settings settings = Settings;
+
+            settings.AutoApply = _autoApplyCheckbox.Checked;
+            settings.Save();
+            if (settings.AutoApply)
             {
                 ApplyChanges();
             }
@@ -134,18 +164,13 @@ namespace FFXIVZoomHack
 
         private void AutoQuitCheckChanged(object sender, EventArgs e)
         {
-            Settings.AutoQuit = !Settings.AutoQuit;
-            Settings.Save();
-            if (Settings.AutoQuit)
+            Settings settings = Settings;
+            settings.AutoQuit = _autoQuitCheckbox.Checked;
+            settings.Save();
+            if (settings.AutoQuit)
             {
                 ApplyChanges();
             }
-        }
-
-        private void Invoke(Action action)
-        {
-            Delegate d = action;
-            Invoke(d);
         }
 
         private void _gotoProcessButton_Click(object sender, EventArgs e)
@@ -155,7 +180,7 @@ namespace FFXIVZoomHack
                 return;
             }
 
-            var selectedPid = (int) _processList.SelectedItem;
+            var selectedPid = (int)_processList.SelectedItem;
             using (var process = Process.GetProcessById(selectedPid))
             {
                 var handle = process.MainWindowHandle;
@@ -166,9 +191,7 @@ namespace FFXIVZoomHack
             }
         }
 
-        [DllImport("USER32.DLL")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
+        
         private void _zoomDefaultButton_Click(object sender, EventArgs e)
         {
             _zoomUpDown.Value = 20m;
@@ -179,104 +202,9 @@ namespace FFXIVZoomHack
             _fovUpDown.Value = .78m;
         }
 
-        private void _updateOffsetsButton_Click(object sender, EventArgs e)
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _updateOffsetsButton.Enabled = false;
-            Settings.OffsetUpdateLocation = _updateOffsetsTextbox.Text;
-
-            Cursor = Cursors.WaitCursor;
-
-            ThreadPool.QueueUserWorkItem(
-                _ =>
-                {
-                    try
-                    {
-                        var offsets = File.Exists(Settings.OffsetUpdateLocation)
-                            ? Settings.Load(Settings.OffsetUpdateLocation)
-                            : LoadSettingsFromRemote(Settings.OffsetUpdateLocation);
-                        if (offsets == null)
-                        {
-                            return;
-                        }
-
-                        if (string.Equals(Settings.LastUpdate, offsets.LastUpdate))
-                        {
-                            MessageBox.Show("No new update found");
-                            return;
-                        }
-
-                        if (offsets.DX11_StructureAddress?.Any() != true)
-                        {
-                            MessageBox.Show($"Problem parsing the updates from {Settings.OffsetUpdateLocation}");
-                            return;
-                        }
-
-                        Settings.DX11_StructureAddress = offsets.DX11_StructureAddress;
-                        Settings.DX11_ZoomCurrent = offsets.DX11_ZoomCurrent;
-                        Settings.DX11_ZoomMax = offsets.DX11_ZoomMax;
-                        Settings.DX11_FovCurrent = offsets.DX11_FovCurrent;
-                        Settings.DX11_FovMax = offsets.DX11_FovMax;
-                        Settings.LastUpdate = offsets.LastUpdate;
-                        Settings.Save();
-
-                        if (Settings.AutoApply)
-                        {
-                            Invoke(() => ApplyChanges());
-                        }
-                        MessageBox.Show("Updated: " + Settings.LastUpdate);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex);
-                    }
-                    finally
-                    {
-                        Invoke(() =>
-                               {
-                                   Cursor = Cursors.Default;
-                                   _updateOffsetsButton.Enabled = true;
-                               });
-                    }
-                });
-        }
-
-        private void _updateLocationDefault_Click(object sender, EventArgs e)
-        {
-            _updateOffsetsTextbox.Text = @"https://raw.githubusercontent.com/jayotterbein/FFXIV-Zoom-Hack/master/Offsets.xml";
-        }
-
-        private static Settings LoadSettingsFromRemote(string url)
-        {
-            var file = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():n}.xml");
-            try
-            {
-                if (File.Exists(file))
-                {
-                    File.Delete(file);
-                }
-
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                using (var webClient = new WebClient())
-                {
-                    webClient.DownloadFile(url, file);
-                }
-
-                return Settings.Load(file);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Problem downloading updates from {url}", ex.Message);
-                return null;
-            }
-            finally
-            {
-                try
-                {
-                    File.Delete(file);
-                }
-                catch { /* ignore io errors deleting a temp file which might not exist */ }
-            }
+            Environment.Exit(0);
         }
     }
 }
