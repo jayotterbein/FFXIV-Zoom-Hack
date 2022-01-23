@@ -39,35 +39,36 @@ I am not associated with that project at all.
 
 ~~10. In CE:~~
 
-~~  1. Select the instruction~~
+  ~~1. Select the instruction~~
 
-~~  2. Look for the line which does the writing, it will have '<<' at the end~~
+  ~~2. Look for the line which does the writing, it will have '<<' at the end~~
 
-~~  3. Look for the register and offset, you should see something like DX9: [ecx+000000F8], DX11: [r9+00000000000000F8] (note: it's been RCX before)~~
+  ~~3. Look for the register and offset, you should see something like DX9: [ecx+000000F8], DX11: [r9+00000000000000F8] (note: it's been RCX before)~~
 
-~~  4. Find the address in the register, at the bottom look for ECX=0125BB80.  Save this address, clipboard or notepad.~~
+  ~~4. Find the address in the register, at the bottom look for ECX=0125BB80.  Save this address, clipboard or notepad.~~
 
-~~  5. Get back to the main CE window~~
+  ~~5. Get back to the main CE window~~
 
 ~~11. In CE: Click "New Scan", Value Type DX9: 4 Bytes, DX11: 8 Bytes, check Hex.  Search~~
 
 ~~12. In CE: Top list should show multiple results, for all green ones do this until something makes sense:~~
 
-~~  1. Double-click the address in the top~~
+  ~~1. Double-click the address in the top~~
 
-~~  2. Double-click the address in the bottom that appears, make sure to click on the 'Address' value~~
+  ~~2. Double-click the address in the bottom that appears, make sure to click on the 'Address' value~~
 
-~~  3. Copy the address, DX9: ffxiv.exe+offset, DX11: ffxiv_dx11.exe+offset~~
+  ~~3. Copy the address, DX9: ffxiv.exe+offset, DX11: ffxiv_dx11.exe+offset~~
 
-~~  4. Check Pointer, change Type to Float~~
+  ~~4. Check Pointer, change Type to Float~~
 
-~~  5. Paste the address in the box above "Add Offset", click OK~~
+  ~~5. Paste the address in the box above "Add Offset", click OK~~
 
-~~  6. If the Value is displayed as a hex: Right-click the row in the bottom, click "show as decimal"~~
+  ~~6. If the Value is displayed as a hex: Right-click the row in the bottom, click "show as decimal"~~
 
-~~  7. Ensure that value updates as you zoom~~
+  ~~7. Ensure that value updates as you zoom~~
 
 ~~You have now found the offset.  Modify the Offset.xml, the offset from above (after ffxiv.exe or ffxiv_dx11.exe)is the StructureAddress in the xml.~~
 
 # No More Offset Update, One Version Forever
+
 Powered By FFXIV Dev Platform/ProcessMemoryApi
