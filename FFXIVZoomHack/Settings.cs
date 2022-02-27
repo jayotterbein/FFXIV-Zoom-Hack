@@ -8,9 +8,13 @@ using System.Windows.Forms;
 namespace FFXIVZoomHack
 {
     [Serializable]
-    public class Settings
+    public class AppSettings
     {
-        private Settings()
+        public bool AutoApply { get; set; }
+        public bool AutoQuit { get; set; }
+        public float DesiredFov { get; set; }
+        public float DesiredZoom { get; set; }
+        public AppSettings()
         {
             AutoApply = true;
             AutoQuit = false;
@@ -18,49 +22,16 @@ namespace FFXIVZoomHack
             DesiredFov = 0.78f;
         }
 
-        
-        public bool AutoApply { get; set; }
-        public bool AutoQuit { get; set; }
-        public float DesiredFov { get; set; }
-        public float DesiredZoom { get; set; }
-
-        private static string SettingsPath
+        public static string Path
         {
             get
             {
                 var path = new FileInfo(Application.ExecutablePath).Directory.ToString() + @"\Setting.json";
-                if (!File.Exists(path))
-                {
-                    Settings settings = new Settings();
-                    settings.Save();
-                }
                 return path;
             }
         }
 
-        public static Settings Load()
-        {
-            var settings = new Settings();
-            try
-            {
-                settings = JsonSerializer.Deserialize<Settings>(SettingsPath);
-            }
-            catch { }
-            return settings;
-        }
-
-
-        public void Save()
-        {
-            var options = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-                WriteIndented = true
-            };
-            string JsonText = JsonSerializer.Serialize(this, options);
-
-            File.WriteAllText(SettingsPath, JsonText);
-        }
+        
 
     }
 }

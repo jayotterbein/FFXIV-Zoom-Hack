@@ -115,7 +115,7 @@
             0,
             0,
             0});
-            this._fovUpDown.ValueChanged += new System.EventHandler(this.NumberChanged);
+            this._fovUpDown.ValueChanged += new System.EventHandler(this.FovChanged);
             // 
             // _zoomUpDown
             // 
@@ -139,7 +139,7 @@
             0,
             0,
             0});
-            this._zoomUpDown.ValueChanged += new System.EventHandler(this.NumberChanged);
+            this._zoomUpDown.ValueChanged += new System.EventHandler(this.ZoomChanged);
             // 
             // _fovDefaultButton
             // 
