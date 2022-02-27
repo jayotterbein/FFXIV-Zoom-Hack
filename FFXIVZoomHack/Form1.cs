@@ -6,6 +6,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 namespace FFXIVZoomHack
@@ -21,7 +24,7 @@ namespace FFXIVZoomHack
         [DllImport("USER32.DLL")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        private static readonly Lazy<Settings> LazySettings = new Lazy<Settings>(() => Settings.Load());
+        private AppSettings settings;
 
         Dictionary<ProcessMemoryReader, ProcessModuleAddress> ProcessCollection;
 
@@ -35,32 +38,32 @@ namespace FFXIVZoomHack
 
         public Form1()
         {
+            settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(AppSettings.Path));
             ProcessCollection = new Dictionary<ProcessMemoryReader, ProcessModuleAddress>();
             InitializeComponent();
-        }
-
-        private static Settings Settings
-        {
-            get { return LazySettings.Value; }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             //just need call once
-            Settings settings = Settings;
+
             _autoApplyCheckbox.Checked = settings.AutoApply;
             _autoQuitCheckbox.Checked = settings.AutoQuit;
             _zoomUpDown.Value = (decimal)settings.DesiredZoom;
             _fovUpDown.Value = (decimal)settings.DesiredFov;
-
         }
 
-        private void NumberChanged(object sender, EventArgs e)
+        private void FovChanged(object sender, EventArgs e)
         {
-            Settings settings = Settings;
-            settings.DesiredZoom = (float)_zoomUpDown.Value;
             settings.DesiredFov = (float)_fovUpDown.Value;
-            settings.Save();
+            SettingSave(this.settings);
+            ApplyChanges();
+        }
+
+        private void ZoomChanged(object sender, EventArgs e)
+        {
+            settings.DesiredZoom = (float)_zoomUpDown.Value;
+            SettingSave(this.settings);
             ApplyChanges();
         }
 
@@ -115,12 +118,12 @@ namespace FFXIVZoomHack
                     _processList.SelectedIndex = 0;
                 }
 
-                if (Settings.AutoApply)
+                if (settings.AutoApply&& activePids.Count() != 0)
                 {
                     ApplyChanges();
                 }
 
-                if (activePids.Count() == 0 && _autoQuitCheckbox.Checked)
+                if (activePids.Count() == 0 && settings.AutoQuit)
                 {
                     Close();
                 }
@@ -150,13 +153,23 @@ namespace FFXIVZoomHack
             });
         }
 
+        public void SettingSave(AppSettings settings)
+        {
+            var option = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+                WriteIndented = true
+            };
+            string JsonText = JsonSerializer.Serialize(settings, option);
+
+            File.WriteAllText(AppSettings.Path, JsonText);
+        }
+
         private void AutoApplyCheckChanged(object sender, EventArgs e)
         {
-            Settings settings = Settings;
-
             settings.AutoApply = _autoApplyCheckbox.Checked;
-            settings.Save();
-            if (settings.AutoApply)
+            SettingSave(settings);
+            if (settings.AutoApply && ProcessCollection.Keys.Count() != 0)
             {
                 ApplyChanges();
             }
@@ -164,13 +177,8 @@ namespace FFXIVZoomHack
 
         private void AutoQuitCheckChanged(object sender, EventArgs e)
         {
-            Settings settings = Settings;
             settings.AutoQuit = _autoQuitCheckbox.Checked;
-            settings.Save();
-            if (settings.AutoQuit)
-            {
-                ApplyChanges();
-            }
+            SettingSave(settings);
         }
 
         private void _gotoProcessButton_Click(object sender, EventArgs e)
@@ -190,7 +198,6 @@ namespace FFXIVZoomHack
                 }
             }
         }
-
         
         private void _zoomDefaultButton_Click(object sender, EventArgs e)
         {
