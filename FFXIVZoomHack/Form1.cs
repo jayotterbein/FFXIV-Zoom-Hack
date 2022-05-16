@@ -24,9 +24,10 @@ namespace FFXIVZoomHack
         [DllImport("USER32.DLL")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        private AppSettings settings;
+        private readonly AppSettings _settings;
+        private readonly Dictionary<ProcessMemoryReader, ProcessModuleAddress> _processCollection;
 
-        Dictionary<ProcessMemoryReader, ProcessModuleAddress> ProcessCollection;
+        private bool _shouldQuitNextTimeProcessEmpty;
 
         //DX11 Only
         const long pCurrentZoom = 0x114;
@@ -38,8 +39,8 @@ namespace FFXIVZoomHack
 
         public Form1()
         {
-            settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(AppSettings.Path));
-            ProcessCollection = new Dictionary<ProcessMemoryReader, ProcessModuleAddress>();
+            _settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(AppSettings.SettingsFile));
+            _processCollection = new Dictionary<ProcessMemoryReader, ProcessModuleAddress>();
             InitializeComponent();
         }
 
@@ -47,44 +48,46 @@ namespace FFXIVZoomHack
         {
             //just need call once
 
-            _autoApplyCheckbox.Checked = settings.AutoApply;
-            _autoQuitCheckbox.Checked = settings.AutoQuit;
-            _zoomUpDown.Value = (decimal)settings.DesiredZoom;
-            _fovUpDown.Value = (decimal)settings.DesiredFov;
+            _shouldQuitNextTimeProcessEmpty = false;
+
+            _autoApplyCheckbox.Checked = _settings.AutoApply;
+            _autoQuitCheckbox.Checked = _settings.AutoQuit;
+            _zoomUpDown.Value = (decimal)_settings.DesiredZoom;
+            _fovUpDown.Value = (decimal)_settings.DesiredFov;
         }
 
         private void FovChanged(object sender, EventArgs e)
         {
-            settings.DesiredFov = (float)_fovUpDown.Value;
-            SettingSave(this.settings);
+            _settings.DesiredFov = (float)_fovUpDown.Value;
+            SettingSave(_settings);
             ApplyChanges();
         }
 
         private void ZoomChanged(object sender, EventArgs e)
         {
-            settings.DesiredZoom = (float)_zoomUpDown.Value;
-            SettingSave(this.settings);
+            _settings.DesiredZoom = (float)_zoomUpDown.Value;
+            SettingSave(_settings);
             ApplyChanges();
         }
 
         private void Timer1Tick(object sender, EventArgs args)
         {
-            ReadyIndicator.Image = ProcessCollection.Count == 0 ? Resources.RedLight : Resources.GreenLight;
+            ReadyIndicator.Image = _processCollection.Count == 0 ? Resources.RedLight : Resources.GreenLight;
 
             try
             {
-                List<int> activePids = Process.GetProcessesByName("ffxiv_dx11").ToList().Select(x => x.Id).ToList();
+                var activePids = Process.GetProcessesByName("ffxiv_dx11").ToList().Select(x => x.Id).ToList();
 
-                for (int i = 0; i < activePids.Count; i++)
+                for (var i = 0; i < activePids.Count; i++)
                 {
                     //Add new process
-                    if (!ProcessCollection.Keys.Select(x => x.process.Id).Contains(activePids[i]))
+                    if (!_processCollection.Keys.Select(x => x.process.Id).Contains(activePids[i]))
                     {
-                        ProcessMemoryReader mReader = new ProcessMemoryReader(activePids[i]);
-                        ProcessModuleAddress module = new ProcessModuleAddress();
+                        var mReader = new ProcessMemoryReader(activePids[i]);
+                        var module = new ProcessModuleAddress();
                         module.pBaseOffset = (long)mReader.ScanPtrBySig("48833D********007411488B0D********4885C97405E8********488D0D")[0];
                         module.pModule = mReader.ReadInt64((IntPtr)((long)mReader.process.Modules[0].BaseAddress + module.pBaseOffset));
-                        ProcessCollection.Add(mReader, module);
+                        _processCollection.Add(mReader, module);
                     }
                     //update combo box
                     try
@@ -98,11 +101,11 @@ namespace FFXIVZoomHack
                 }
 
                 //delete closed process
-                foreach (ProcessMemoryReader mReader in ProcessCollection.Keys)
+                foreach (ProcessMemoryReader mReader in _processCollection.Keys)
                 {
                     if (!activePids.Contains(mReader.process.Id))
                     {
-                        ProcessCollection.Remove(mReader);
+                        _processCollection.Remove(mReader);
                     }
                 }
 
@@ -118,16 +121,19 @@ namespace FFXIVZoomHack
                     _processList.SelectedIndex = 0;
                 }
 
-                if (settings.AutoApply&& activePids.Count() != 0)
+                if (_settings.AutoApply && activePids.Count != 0)
                 {
                     ApplyChanges();
                 }
 
-                if (activePids.Count() == 0 && settings.AutoQuit)
+                if (!activePids.Any() && _settings.AutoQuit && _shouldQuitNextTimeProcessEmpty)
                 {
                     Close();
                 }
-
+                else if (activePids.Any())
+                {
+                    _shouldQuitNextTimeProcessEmpty = true;
+                }
             }
             catch (Exception ex)
             {
@@ -141,36 +147,35 @@ namespace FFXIVZoomHack
 
         private void ApplyChanges()
         {
-            byte[] ZoomBytes = BitConverter.GetBytes(Convert.ToSingle(_zoomUpDown.Value));
-            byte[] FOVBytes = BitConverter.GetBytes(Convert.ToSingle(_fovUpDown.Value));
+            var ZoomBytes = BitConverter.GetBytes(Convert.ToSingle(_zoomUpDown.Value));
+            var FOVBytes = BitConverter.GetBytes(Convert.ToSingle(_fovUpDown.Value));
 
-            var result = Parallel.ForEach(ProcessCollection.Keys, (mReader) => {
-                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pMinZoom), BitConverter.GetBytes(Convert.ToSingle(0.01)));
-                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pMaxZoom), ZoomBytes);
+            Parallel.ForEach(_processCollection.Keys, mReader => {
+                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pMinZoom), BitConverter.GetBytes(Convert.ToSingle(0.01)));
+                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pMaxZoom), ZoomBytes);
 
-                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pMinFOV), BitConverter.GetBytes(Convert.ToSingle(0.01)));
-                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pMaxFOV), FOVBytes);
-                mReader.WriteByteArray((IntPtr)(ProcessCollection[mReader].pModule + pCurrentFOV), FOVBytes);
+                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pMinFOV), BitConverter.GetBytes(Convert.ToSingle(0.01)));
+                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pMaxFOV), FOVBytes);
+                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pCurrentFOV), FOVBytes);
             });
         }
 
-        public void SettingSave(AppSettings settings)
+        private static void SettingSave(AppSettings settings)
         {
             var option = new JsonSerializerOptions
             {
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
                 WriteIndented = true
             };
-            string JsonText = JsonSerializer.Serialize(settings, option);
-
-            File.WriteAllText(AppSettings.Path, JsonText);
+            var jsonText = JsonSerializer.Serialize(settings, option);
+            File.WriteAllText(AppSettings.SettingsFile, jsonText);
         }
 
         private void AutoApplyCheckChanged(object sender, EventArgs e)
         {
-            settings.AutoApply = _autoApplyCheckbox.Checked;
-            SettingSave(settings);
-            if (settings.AutoApply && ProcessCollection.Keys.Count() != 0)
+            _settings.AutoApply = _autoApplyCheckbox.Checked;
+            SettingSave(_settings);
+            if (_settings.AutoApply && _processCollection.Keys.Count() != 0)
             {
                 ApplyChanges();
             }
@@ -178,8 +183,8 @@ namespace FFXIVZoomHack
 
         private void AutoQuitCheckChanged(object sender, EventArgs e)
         {
-            settings.AutoQuit = _autoQuitCheckbox.Checked;
-            SettingSave(settings);
+            _settings.AutoQuit = _autoQuitCheckbox.Checked;
+            SettingSave(_settings);
         }
 
         private void _gotoProcessButton_Click(object sender, EventArgs e)
