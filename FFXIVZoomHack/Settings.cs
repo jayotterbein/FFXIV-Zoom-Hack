@@ -1,9 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
-using System.Windows.Forms;
 
 namespace FFXIVZoomHack
 {
@@ -14,6 +10,7 @@ namespace FFXIVZoomHack
         public bool AutoQuit { get; set; }
         public float DesiredFov { get; set; }
         public float DesiredZoom { get; set; }
+        
         public AppSettings()
         {
             AutoApply = true;
@@ -22,16 +19,17 @@ namespace FFXIVZoomHack
             DesiredFov = 0.78f;
         }
 
-        public static string Path
+        public static string SettingsFile
         {
             get
             {
-                var path = new FileInfo(Application.ExecutablePath).Directory.ToString() + @"\Setting.json";
-                return path;
+                var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFXIVZoomHack");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                return Path.Combine(path, "Settings.json");
             }
         }
-
-        
-
     }
 }

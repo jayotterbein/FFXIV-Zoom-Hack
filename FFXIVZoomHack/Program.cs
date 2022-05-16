@@ -15,17 +15,15 @@ namespace FFXIVZoomHack
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if (!File.Exists(AppSettings.Path))
+            if (!File.Exists(AppSettings.SettingsFile))
             {
-                File.Create(AppSettings.Path).Dispose();
-                AppSettings _settings = new AppSettings();
                 var option = new JsonSerializerOptions
                 {
                     Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
                     WriteIndented = true
                 };
-                string JsonText = JsonSerializer.Serialize(_settings, option);
-                File.WriteAllText(AppSettings.Path, JsonText);
+                var jsonText = JsonSerializer.Serialize(new AppSettings(), option);
+                File.WriteAllText(AppSettings.SettingsFile, jsonText);
             }
             Application.Run(new Form1());
         }

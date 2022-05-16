@@ -131,7 +131,8 @@ namespace FFXIVZoomHack
             }
             catch (Exception ex)
             {
-                using (var sw = File.AppendText(new FileInfo(Application.ExecutablePath).Directory.ToString() + @"\log.txt"))
+                var logFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFXIVZoomHack", "log.txt");
+                using (var sw = File.AppendText(logFile))
                 {
                     sw.WriteLine(ex.Message);
                 }
