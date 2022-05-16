@@ -12,9 +12,12 @@ jobs:
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '[,17)'
+          msbuild-architecture: x64
 
       - name: Build release application
-        run: msbuild FFXIVZoomHack.sln /t:rebuild /property:Configuration=Release
+        run: msbuild /t:rebuild /p:Configuration=Release .\FFXIVZoomHack.sln
 
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
