@@ -3,6 +3,7 @@ using ProcessMemoryApi;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -37,11 +38,31 @@ namespace FFXIVZoomHack
         const long pMinFOV = 0x124;
         const long pMaxFOV = 0x128;
 
+        private NotifyIcon _notifyIcon;
+        
         public Form1()
         {
             _settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(AppSettings.SettingsFile));
             _processCollection = new Dictionary<ProcessMemoryReader, ProcessModuleAddress>();
             InitializeComponent();
+
+            _notifyIcon = new NotifyIcon(components);
+            _notifyIcon.Text = "FFXIV Zoom Hack";
+            _notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+            _notifyIcon.BalloonTipText = "Double click to open app";
+            _notifyIcon.BalloonTipTitle = "FFXIV Zoom Hack";
+            _notifyIcon.ShowBalloonTip(1000);
+            using (var icon = GetType().Assembly.GetManifestResourceStream($"{GetType().Namespace}.zoom_kNq_icon.ico"))
+            {
+                _notifyIcon.Icon = new Icon(icon);
+            }
+
+            _notifyIcon.DoubleClick += (sender, args) =>
+            {
+                Show();
+                WindowState = FormWindowState.Normal;
+                _notifyIcon.Visible = false;
+            };
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -218,6 +239,15 @@ namespace FFXIVZoomHack
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+             if (WindowState == FormWindowState.Minimized)  
+             {  
+                  Hide();  
+                  _notifyIcon.Visible = true;                  
+             }   
         }
     }
 }
