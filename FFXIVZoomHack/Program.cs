@@ -15,16 +15,17 @@ namespace FFXIVZoomHack
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if (!File.Exists(AppSettings.SettingsFile))
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFXIVZoomHack");
+            if (!Directory.Exists(path))
             {
-                var option = new JsonSerializerOptions
-                {
-                    Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-                    WriteIndented = true
-                };
-                var jsonText = JsonSerializer.Serialize(new AppSettings(), option);
-                File.WriteAllText(AppSettings.SettingsFile, jsonText);
+                Directory.CreateDirectory(path);
             }
+            path = Path.Combine(path, "Settings.json");
+            if (!File.Exists(path))
+            {
+                new AppSettings().Save();
+            }
+            
             Application.Run(new Form1());
         }
     }

@@ -1,7 +1,7 @@
 # FFXIV-Zoom-Hack
 Allow adjustment of camera zoom and field of vision beyond what the game normally allows.
 
-Works for DX11 only.
+Works for DX11 only. 
 
 You can use the source or download the latest release from here: https://github.com/jayotterbein/FFXIV-Zoom-Hack/releases/latest
 
@@ -73,6 +73,10 @@ ILMerge.exe /out:ZoomHack.exe FFXIVZoomHack.exe ProcessMemoryApi.dll Microsoft.B
 
 ~~You have now found the offset.  Modify the Offset.xml, the offset from above (after ffxiv.exe or ffxiv_dx11.exe)is the StructureAddress in the xml.~~
 
+# Enviroment 
+
+Windows 10 64-bit With .NET Framework 4.8 Runtime
+
 # No More Offset Update, One Version Forever
 
-Powered By FFXIV Dev Platform/ProcessMemoryApi
+Powered By KingsZNHONE/XIVDevPlatform/XIVMemoryReader

@@ -1,5 +1,5 @@
 ﻿using FFXIVZoomHack.Properties;
-using ProcessMemoryApi;
+using XIVMemoryReader;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,7 +42,7 @@ namespace FFXIVZoomHack
         
         public Form1()
         {
-            _settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(AppSettings.SettingsFile));
+            _settings = AppSettings.Load();
             _processCollection = new Dictionary<ProcessMemoryReader, ProcessModuleAddress>();
             InitializeComponent();
 
@@ -52,6 +52,7 @@ namespace FFXIVZoomHack
             _notifyIcon.BalloonTipText = "Double click to open app";
             _notifyIcon.BalloonTipTitle = "FFXIV Zoom Hack";
             _notifyIcon.ShowBalloonTip(1000);
+
             using (var icon = GetType().Assembly.GetManifestResourceStream($"{GetType().Namespace}.zoom_kNq_icon.ico"))
             {
                 _notifyIcon.Icon = new Icon(icon);
@@ -68,7 +69,6 @@ namespace FFXIVZoomHack
         private void Form1_Load(object sender, EventArgs e)
         {
             //just need call once
-
             _shouldQuitNextTimeProcessEmpty = false;
 
             _autoApplyCheckbox.Checked = _settings.AutoApply;
@@ -80,14 +80,14 @@ namespace FFXIVZoomHack
         private void FovChanged(object sender, EventArgs e)
         {
             _settings.DesiredFov = (float)_fovUpDown.Value;
-            SettingSave(_settings);
+            _settings.Save();
             ApplyChanges();
         }
 
         private void ZoomChanged(object sender, EventArgs e)
         {
             _settings.DesiredZoom = (float)_zoomUpDown.Value;
-            SettingSave(_settings);
+            _settings.Save();
             ApplyChanges();
         }
 
@@ -161,7 +161,7 @@ namespace FFXIVZoomHack
                 var logFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FFXIVZoomHack", "log.txt");
                 using (var sw = File.AppendText(logFile))
                 {
-                    sw.WriteLine(ex.Message);
+                    sw.WriteLine(ex.Message+Environment.NewLine);
                 }
             }
         }
@@ -181,21 +181,10 @@ namespace FFXIVZoomHack
             });
         }
 
-        private static void SettingSave(AppSettings settings)
-        {
-            var option = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-                WriteIndented = true
-            };
-            var jsonText = JsonSerializer.Serialize(settings, option);
-            File.WriteAllText(AppSettings.SettingsFile, jsonText);
-        }
-
         private void AutoApplyCheckChanged(object sender, EventArgs e)
         {
             _settings.AutoApply = _autoApplyCheckbox.Checked;
-            SettingSave(_settings);
+            _settings.Save();
             if (_settings.AutoApply && _processCollection.Keys.Count() != 0)
             {
                 ApplyChanges();
@@ -205,7 +194,7 @@ namespace FFXIVZoomHack
         private void AutoQuitCheckChanged(object sender, EventArgs e)
         {
             _settings.AutoQuit = _autoQuitCheckbox.Checked;
-            SettingSave(_settings);
+            _settings.Save();
         }
 
         private void _gotoProcessButton_Click(object sender, EventArgs e)
