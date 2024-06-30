@@ -106,7 +106,11 @@ namespace FFXIVZoomHack
                     {
                         var mReader = new ProcessMemoryReader(activePids[i]);
                         var module = new ProcessModuleAddress();
-                        module.pBaseOffset = (long)mReader.ScanPtrBySig("48833D********007411488B0D********4885C97405E8********488D0D")[0];
+                        // 00 A0 6F 4B F6 7F 00 00 28 00 00 00 00 00 00 00 48 D4 5A 4B F6 7F 00 00 04 00 00 00 00 00 51 00 00 00 00 00 14 00 40 C0 00 00 00 00 00 00 00 00
+                        // 00 A0 6F 4B F6 7F 00 00 28 ** 00 00 00 00 00 00 48 D4 5A 4B F6 7F 00 00 ** ** ** ** ** ** ** 00 00 00 00 00 ** ** ** ** 00 00 00 00 00 00 00 00
+                        // 00 A0 6F 4B F6 7F 00 00 00 00 00 00 00 00 00 00 48 D4 5A 4B F6 7F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E0 6D 73 AB E0 01 00 00 E0 6D 73 AB E0 01
+                        // 00 A0 6F 4B F6 7F 00 00 28 00 00 00 00 00 00 00 48 D4 5A 4B F6 7F 00 00 04 00 00 00 3C 00 0B 00 00 00 00 00 0F 00 40 C0 00 00 00 00 00 00 00 00 D0 26 50 1A E5 01 00 00 D0 26 50 1A E5 01
+                        module.pBaseOffset = (long)mReader.ScanPtrBySig("00A06F4BF67F0000****00000000000048D45A4BF67F0000")[0];
                         module.pModule = mReader.ReadInt64((IntPtr)((long)mReader.process.Modules[0].BaseAddress + module.pBaseOffset));
                         _processCollection.Add(mReader, module);
                     }
