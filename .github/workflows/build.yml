@@ -16,6 +16,12 @@ jobs:
           vs-version: '[,17)'
           msbuild-architecture: x64
 
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1
+
+      - name: Restore NuGet packages
+        run: nuget restore .\FFXIVZoomHack.sln
+
       - name: Build release application
         run: msbuild /t:rebuild /p:Configuration=Release .\FFXIVZoomHack.sln
 
