@@ -7,11 +7,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 namespace FFXIVZoomHack
 {
     public struct ProcessModuleAddress
@@ -106,8 +108,29 @@ namespace FFXIVZoomHack
                     {
                         var mReader = new ProcessMemoryReader(activePids[i]);
                         var module = new ProcessModuleAddress();
-                        module.pBaseOffset = (long)mReader.ScanPtrBySig("48833D********007411488B0D********4885C97405E8********488D0D")[0];
+
+                        //OLD
+                        //module.pBaseOffset = (long)mReader.ScanPtrBySig("48833D********007411488B0D********4885C97405E8********488D0D")[0];
+
+                        //For Reference: The desired pointer follows the scan signature.
+                        //Below is an example of the assembly.  Wildcards are needed for address references.
+
+                        //29CB6429AE8 - 48 8D 0D E14BF601 - lea rcx,[29CB838E6D0]
+                        //29CB6429AEF - E8 8C530100 - call 29CB643EE80
+                        //29CB6429AF4 - 48 39 35 250B1502 - cmp[29CB857A620],rsi
+                        //29CB6429AFB - 74 11 - je 29CB6429B0E
+                        //29CB6429AFD - 48 8B 0D 040B1502 - mov rcx,[29CB857A608]
+                        //29CB6429B04 - 48 85 C9 - test rcx,rcx
+                        //29CB6429B07 - 74 05 - je 29CB6429B0E
+                        //29CB6429B09 - E8 528E0200 - call 29CB6452960
+                        //29CB6429B0E - 48 8D 0D 5BAC1402 - lea rcx,[29CB8574770]
+
+                        module.pBaseOffset = (long)mReader.ScanPtrBySig("488D0D********E8********483935********7411488B0D********4885C97405E8********488D0D")[0];
                         module.pModule = mReader.ReadInt64((IntPtr)((long)mReader.process.Modules[0].BaseAddress + module.pBaseOffset));
+
+                        //Was useful, but not needed for now.
+                        //labelPointer.Text = "Pointer Found at: "+((long)mReader.process.Modules[0].BaseAddress + module.pBaseOffset).ToString("X");
+
                         _processCollection.Add(mReader, module);
                     }
                     //update combo box
