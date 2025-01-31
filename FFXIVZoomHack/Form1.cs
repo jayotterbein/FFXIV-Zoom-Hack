@@ -1,46 +1,39 @@
-﻿using FFXIVZoomHack.Properties;
-using ProcessMemoryApi;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using FFXIVZoomHack.Properties;
 
 namespace FFXIVZoomHack
 {
     public struct ProcessModuleAddress
     {
-        public long pBaseOffset;
-        public long pModule;
+        public nint pBaseOffset;
+        public nint pModule;
     }
 
     public partial class Form1 : Form
     {
         [DllImport("USER32.DLL")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        private static extern bool SetForegroundWindow(nint hWnd);
 
         private readonly AppSettings _settings;
         private readonly Dictionary<ProcessMemoryReader, ProcessModuleAddress> _processCollection;
 
         private bool _shouldQuitNextTimeProcessEmpty;
 
-        //DX11 Only
-        const long pCurrentZoom = 0x114;
-        const long pMinZoom = 0x118;
-        const long pMaxZoom = 0x11C;
-        const long pCurrentFOV = 0x120;
-        const long pMinFOV = 0x124;
-        const long pMaxFOV = 0x128;
+        //DX11 x86_64 Only
+        private const nint pCurrentZoom = 0x114;
+
+        private const nint pMinZoom = 0x118;
+        private const nint pMaxZoom = 0x11C;
+        private const nint pCurrentFOV = 0x120;
+        private const nint pMinFOV = 0x124;
+        private const nint pMaxFOV = 0x128;
 
         private NotifyIcon _notifyIcon;
-        
+
         public Form1()
         {
             _settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(AppSettings.SettingsFile));
@@ -106,7 +99,7 @@ namespace FFXIVZoomHack
                     if (!_processCollection.Keys.Select(x => x.process.Id).Contains(activePids[i]))
                     {
                         var mReader = new ProcessMemoryReader(activePids[i]);
-                        var module = new ProcessModuleAddress();
+                        var moduleInfo = new ProcessModuleAddress();
 
                         //OLD
                         //module.pBaseOffset = (long)mReader.ScanPtrBySig("48833D********007411488B0D********4885C97405E8********488D0D")[0];
@@ -124,13 +117,13 @@ namespace FFXIVZoomHack
                         //29CB6429B09 - E8 528E0200 - call 29CB6452960
                         //29CB6429B0E - 48 8D 0D 5BAC1402 - lea rcx,[29CB8574770]
 
-                        module.pBaseOffset = (long)mReader.ScanPtrBySig("488D0D********E8********483935********7411488B0D********4885C97405E8********488D0D")[0];
-                        module.pModule = mReader.ReadInt64((IntPtr)((long)mReader.process.Modules[0].BaseAddress + module.pBaseOffset));
+                        moduleInfo.pBaseOffset = mReader.ScanPtrBySig("488D0D********E8********483935********7411488B0D********4885C97405E8********488D0D")[0];
+                        moduleInfo.pModule = new nint(mReader.ReadInt64(mReader.process.Modules[0].BaseAddress + moduleInfo.pBaseOffset));
 
                         //Was useful, but not needed for now.
                         //labelPointer.Text = "Pointer Found at: "+((long)mReader.process.Modules[0].BaseAddress + module.pBaseOffset).ToString("X");
 
-                        _processCollection.Add(mReader, module);
+                        _processCollection.Add(mReader, moduleInfo);
                     }
                     //update combo box
                     try
@@ -193,13 +186,14 @@ namespace FFXIVZoomHack
             var ZoomBytes = BitConverter.GetBytes(Convert.ToSingle(_zoomUpDown.Value));
             var FOVBytes = BitConverter.GetBytes(Convert.ToSingle(_fovUpDown.Value));
 
-            Parallel.ForEach(_processCollection.Keys, mReader => {
-                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pMinZoom), BitConverter.GetBytes(Convert.ToSingle(0.01)));
-                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pMaxZoom), ZoomBytes);
+            Parallel.ForEach(_processCollection.Keys, mReader =>
+            {
+                mReader.WriteByteArray(_processCollection[mReader].pModule + pMinZoom, BitConverter.GetBytes(Convert.ToSingle(0.01)));
+                mReader.WriteByteArray(_processCollection[mReader].pModule + pMaxZoom, ZoomBytes);
 
-                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pMinFOV), BitConverter.GetBytes(Convert.ToSingle(0.01)));
-                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pMaxFOV), FOVBytes);
-                mReader.WriteByteArray((IntPtr)(_processCollection[mReader].pModule + pCurrentFOV), FOVBytes);
+                mReader.WriteByteArray(_processCollection[mReader].pModule + pMinFOV, BitConverter.GetBytes(Convert.ToSingle(0.01)));
+                mReader.WriteByteArray(_processCollection[mReader].pModule + pMaxFOV, FOVBytes);
+                mReader.WriteByteArray(_processCollection[mReader].pModule + pCurrentFOV, FOVBytes);
             });
         }
 
@@ -247,7 +241,7 @@ namespace FFXIVZoomHack
                 }
             }
         }
-        
+
         private void _zoomDefaultButton_Click(object sender, EventArgs e)
         {
             _zoomUpDown.Value = 20m;
@@ -265,11 +259,11 @@ namespace FFXIVZoomHack
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-             if (WindowState == FormWindowState.Minimized)  
-             {  
-                  Hide();  
-                  _notifyIcon.Visible = true;                  
-             }   
+            if (WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                _notifyIcon.Visible = true;
+            }
         }
     }
 }

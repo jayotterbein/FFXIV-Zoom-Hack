@@ -28,217 +28,236 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this._autoApplyCheckbox = new System.Windows.Forms.CheckBox();
-            this._zoomSettingsBox = new System.Windows.Forms.GroupBox();
-            this._fovUpDown = new System.Windows.Forms.NumericUpDown();
-            this._zoomUpDown = new System.Windows.Forms.NumericUpDown();
-            this._fovDefaultButton = new System.Windows.Forms.Button();
-            this._zoomDefaultButton = new System.Windows.Forms.Button();
-            this._fovLabel = new System.Windows.Forms.Label();
-            this._zoomLabel = new System.Windows.Forms.Label();
-            this._processListBox = new System.Windows.Forms.GroupBox();
-            this.ReadyIndicator = new System.Windows.Forms.PictureBox();
-            this._autoQuitCheckbox = new System.Windows.Forms.CheckBox();
-            this._gotoProcessButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this._processList = new System.Windows.Forms.ComboBox();
-            this._autoQuitTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this._zoomSettingsBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._fovUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this._zoomUpDown)).BeginInit();
-            this._processListBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ReadyIndicator)).BeginInit();
-            this.SuspendLayout();
+            _autoApplyCheckbox = new System.Windows.Forms.CheckBox();
+            _zoomSettingsBox = new System.Windows.Forms.GroupBox();
+            _fovUpDown = new System.Windows.Forms.NumericUpDown();
+            _zoomUpDown = new System.Windows.Forms.NumericUpDown();
+            _fovDefaultButton = new System.Windows.Forms.Button();
+            _zoomDefaultButton = new System.Windows.Forms.Button();
+            _fovLabel = new System.Windows.Forms.Label();
+            _zoomLabel = new System.Windows.Forms.Label();
+            _processListBox = new System.Windows.Forms.GroupBox();
+            ReadyIndicator = new System.Windows.Forms.PictureBox();
+            _autoQuitCheckbox = new System.Windows.Forms.CheckBox();
+            _gotoProcessButton = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            _processList = new System.Windows.Forms.ComboBox();
+            _autoQuitTooltip = new System.Windows.Forms.ToolTip(components);
+            timer1 = new System.Windows.Forms.Timer(components);
+            _zoomSettingsBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)_fovUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)_zoomUpDown).BeginInit();
+            _processListBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ReadyIndicator).BeginInit();
+            SuspendLayout();
             // 
             // _autoApplyCheckbox
             // 
-            this._autoApplyCheckbox.AutoSize = true;
-            this._autoApplyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._autoApplyCheckbox.Location = new System.Drawing.Point(10, 25);
-            this._autoApplyCheckbox.Name = "_autoApplyCheckbox";
-            this._autoApplyCheckbox.Size = new System.Drawing.Size(219, 24);
-            this._autoApplyCheckbox.TabIndex = 0;
-            this._autoApplyCheckbox.Text = "Automatically apply on load";
-            this._autoApplyCheckbox.UseVisualStyleBackColor = true;
-            this._autoApplyCheckbox.CheckedChanged += new System.EventHandler(this.AutoApplyCheckChanged);
+            _autoApplyCheckbox.AutoSize = true;
+            _autoApplyCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            _autoApplyCheckbox.Location = new System.Drawing.Point(18, 46);
+            _autoApplyCheckbox.Margin = new System.Windows.Forms.Padding(6);
+            _autoApplyCheckbox.Name = "_autoApplyCheckbox";
+            _autoApplyCheckbox.Size = new System.Drawing.Size(330, 33);
+            _autoApplyCheckbox.TabIndex = 0;
+            _autoApplyCheckbox.Text = "Automatically apply on load";
+            _autoApplyCheckbox.UseVisualStyleBackColor = true;
+            _autoApplyCheckbox.CheckedChanged += AutoApplyCheckChanged;
             // 
             // _zoomSettingsBox
             // 
-            this._zoomSettingsBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this._zoomSettingsBox.Controls.Add(this._fovUpDown);
-            this._zoomSettingsBox.Controls.Add(this._zoomUpDown);
-            this._zoomSettingsBox.Controls.Add(this._fovDefaultButton);
-            this._zoomSettingsBox.Controls.Add(this._zoomDefaultButton);
-            this._zoomSettingsBox.Controls.Add(this._fovLabel);
-            this._zoomSettingsBox.Controls.Add(this._zoomLabel);
-            this._zoomSettingsBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._zoomSettingsBox.Location = new System.Drawing.Point(14, 124);
-            this._zoomSettingsBox.Name = "_zoomSettingsBox";
-            this._zoomSettingsBox.Size = new System.Drawing.Size(474, 128);
-            this._zoomSettingsBox.TabIndex = 1;
-            this._zoomSettingsBox.TabStop = false;
-            this._zoomSettingsBox.Text = "Zoom Settings";
+            _zoomSettingsBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            _zoomSettingsBox.Controls.Add(_fovUpDown);
+            _zoomSettingsBox.Controls.Add(_zoomUpDown);
+            _zoomSettingsBox.Controls.Add(_fovDefaultButton);
+            _zoomSettingsBox.Controls.Add(_zoomDefaultButton);
+            _zoomSettingsBox.Controls.Add(_fovLabel);
+            _zoomSettingsBox.Controls.Add(_zoomLabel);
+            _zoomSettingsBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            _zoomSettingsBox.Location = new System.Drawing.Point(26, 229);
+            _zoomSettingsBox.Margin = new System.Windows.Forms.Padding(6);
+            _zoomSettingsBox.Name = "_zoomSettingsBox";
+            _zoomSettingsBox.Padding = new System.Windows.Forms.Padding(6);
+            _zoomSettingsBox.Size = new System.Drawing.Size(869, 236);
+            _zoomSettingsBox.TabIndex = 1;
+            _zoomSettingsBox.TabStop = false;
+            _zoomSettingsBox.Text = "Zoom Settings";
             // 
             // _fovUpDown
             // 
-            this._fovUpDown.DecimalPlaces = 2;
-            this._fovUpDown.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            this._fovUpDown.Location = new System.Drawing.Point(243, 83);
-            this._fovUpDown.Maximum = new decimal(new int[] { 300, 0, 0, 131072 });
-            this._fovUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
-            this._fovUpDown.Name = "_fovUpDown";
-            this._fovUpDown.Size = new System.Drawing.Size(215, 26);
-            this._fovUpDown.TabIndex = 7;
-            this._fovUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
-            this._fovUpDown.ValueChanged += new System.EventHandler(this.FovChanged);
+            _fovUpDown.DecimalPlaces = 2;
+            _fovUpDown.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            _fovUpDown.Location = new System.Drawing.Point(446, 153);
+            _fovUpDown.Margin = new System.Windows.Forms.Padding(6);
+            _fovUpDown.Maximum = new decimal(new int[] { 300, 0, 0, 131072 });
+            _fovUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
+            _fovUpDown.Name = "_fovUpDown";
+            _fovUpDown.Size = new System.Drawing.Size(394, 35);
+            _fovUpDown.TabIndex = 7;
+            _fovUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
+            _fovUpDown.ValueChanged += FovChanged;
             // 
             // _zoomUpDown
             // 
-            this._zoomUpDown.Location = new System.Drawing.Point(10, 83);
-            this._zoomUpDown.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
-            this._zoomUpDown.Minimum = new decimal(new int[] { 2, 0, 0, 0 });
-            this._zoomUpDown.Name = "_zoomUpDown";
-            this._zoomUpDown.Size = new System.Drawing.Size(215, 26);
-            this._zoomUpDown.TabIndex = 6;
-            this._zoomUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
-            this._zoomUpDown.ValueChanged += new System.EventHandler(this.ZoomChanged);
+            _zoomUpDown.Location = new System.Drawing.Point(18, 153);
+            _zoomUpDown.Margin = new System.Windows.Forms.Padding(6);
+            _zoomUpDown.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            _zoomUpDown.Minimum = new decimal(new int[] { 2, 0, 0, 0 });
+            _zoomUpDown.Name = "_zoomUpDown";
+            _zoomUpDown.Size = new System.Drawing.Size(394, 35);
+            _zoomUpDown.TabIndex = 6;
+            _zoomUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
+            _zoomUpDown.ValueChanged += ZoomChanged;
             // 
             // _fovDefaultButton
             // 
-            this._fovDefaultButton.Location = new System.Drawing.Point(362, 45);
-            this._fovDefaultButton.Name = "_fovDefaultButton";
-            this._fovDefaultButton.Size = new System.Drawing.Size(96, 26);
-            this._fovDefaultButton.TabIndex = 5;
-            this._fovDefaultButton.Text = "Default";
-            this._fovDefaultButton.UseVisualStyleBackColor = true;
-            this._fovDefaultButton.Click += new System.EventHandler(this._fovDefaultButton_Click);
+            _fovDefaultButton.Location = new System.Drawing.Point(664, 83);
+            _fovDefaultButton.Margin = new System.Windows.Forms.Padding(6);
+            _fovDefaultButton.Name = "_fovDefaultButton";
+            _fovDefaultButton.Size = new System.Drawing.Size(176, 48);
+            _fovDefaultButton.TabIndex = 5;
+            _fovDefaultButton.Text = "Default";
+            _fovDefaultButton.UseVisualStyleBackColor = true;
+            _fovDefaultButton.Click += _fovDefaultButton_Click;
             // 
             // _zoomDefaultButton
             // 
-            this._zoomDefaultButton.Location = new System.Drawing.Point(129, 45);
-            this._zoomDefaultButton.Name = "_zoomDefaultButton";
-            this._zoomDefaultButton.Size = new System.Drawing.Size(96, 26);
-            this._zoomDefaultButton.TabIndex = 4;
-            this._zoomDefaultButton.Text = "Default";
-            this._zoomDefaultButton.UseVisualStyleBackColor = true;
-            this._zoomDefaultButton.Click += new System.EventHandler(this._zoomDefaultButton_Click);
+            _zoomDefaultButton.Location = new System.Drawing.Point(236, 83);
+            _zoomDefaultButton.Margin = new System.Windows.Forms.Padding(6);
+            _zoomDefaultButton.Name = "_zoomDefaultButton";
+            _zoomDefaultButton.Size = new System.Drawing.Size(176, 48);
+            _zoomDefaultButton.TabIndex = 4;
+            _zoomDefaultButton.Text = "Default";
+            _zoomDefaultButton.UseVisualStyleBackColor = true;
+            _zoomDefaultButton.Click += _zoomDefaultButton_Click;
             // 
             // _fovLabel
             // 
-            this._fovLabel.AutoSize = true;
-            this._fovLabel.Location = new System.Drawing.Point(239, 45);
-            this._fovLabel.Name = "_fovLabel";
-            this._fovLabel.Size = new System.Drawing.Size(99, 20);
-            this._fovLabel.TabIndex = 2;
-            this._fovLabel.Text = "Field of View";
+            _fovLabel.AutoSize = true;
+            _fovLabel.Location = new System.Drawing.Point(446, 93);
+            _fovLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            _fovLabel.Name = "_fovLabel";
+            _fovLabel.Size = new System.Drawing.Size(153, 29);
+            _fovLabel.TabIndex = 2;
+            _fovLabel.Text = "Field of View";
             // 
             // _zoomLabel
             // 
-            this._zoomLabel.AutoSize = true;
-            this._zoomLabel.Location = new System.Drawing.Point(6, 45);
-            this._zoomLabel.Name = "_zoomLabel";
-            this._zoomLabel.Size = new System.Drawing.Size(83, 20);
-            this._zoomLabel.TabIndex = 1;
-            this._zoomLabel.Text = "Zoom Max";
+            _zoomLabel.AutoSize = true;
+            _zoomLabel.Location = new System.Drawing.Point(18, 93);
+            _zoomLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            _zoomLabel.Name = "_zoomLabel";
+            _zoomLabel.Size = new System.Drawing.Size(125, 29);
+            _zoomLabel.TabIndex = 1;
+            _zoomLabel.Text = "Zoom Max";
             // 
             // _processListBox
             // 
-            this._processListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this._processListBox.Controls.Add(this.ReadyIndicator);
-            this._processListBox.Controls.Add(this._autoQuitCheckbox);
-            this._processListBox.Controls.Add(this._gotoProcessButton);
-            this._processListBox.Controls.Add(this.label1);
-            this._processListBox.Controls.Add(this._processList);
-            this._processListBox.Controls.Add(this._autoApplyCheckbox);
-            this._processListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._processListBox.Location = new System.Drawing.Point(14, 10);
-            this._processListBox.Name = "_processListBox";
-            this._processListBox.Size = new System.Drawing.Size(474, 94);
-            this._processListBox.TabIndex = 2;
-            this._processListBox.TabStop = false;
-            this._processListBox.Text = "Processes";
+            _processListBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            _processListBox.Controls.Add(ReadyIndicator);
+            _processListBox.Controls.Add(_autoQuitCheckbox);
+            _processListBox.Controls.Add(_gotoProcessButton);
+            _processListBox.Controls.Add(label1);
+            _processListBox.Controls.Add(_processList);
+            _processListBox.Controls.Add(_autoApplyCheckbox);
+            _processListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            _processListBox.Location = new System.Drawing.Point(26, 18);
+            _processListBox.Margin = new System.Windows.Forms.Padding(6);
+            _processListBox.Name = "_processListBox";
+            _processListBox.Padding = new System.Windows.Forms.Padding(6);
+            _processListBox.Size = new System.Drawing.Size(869, 174);
+            _processListBox.TabIndex = 2;
+            _processListBox.TabStop = false;
+            _processListBox.Text = "Processes";
             // 
             // ReadyIndicator
             // 
-            this.ReadyIndicator.Location = new System.Drawing.Point(446, 57);
-            this.ReadyIndicator.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.ReadyIndicator.Name = "ReadyIndicator";
-            this.ReadyIndicator.Size = new System.Drawing.Size(22, 26);
-            this.ReadyIndicator.TabIndex = 12;
-            this.ReadyIndicator.TabStop = false;
+            ReadyIndicator.Anchor = System.Windows.Forms.AnchorStyles.None;
+            ReadyIndicator.Location = new System.Drawing.Point(766, 95);
+            ReadyIndicator.Margin = new System.Windows.Forms.Padding(0);
+            ReadyIndicator.Name = "ReadyIndicator";
+            ReadyIndicator.Size = new System.Drawing.Size(48, 48);
+            ReadyIndicator.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            ReadyIndicator.TabIndex = 12;
+            ReadyIndicator.TabStop = false;
             // 
             // _autoQuitCheckbox
             // 
-            this._autoQuitCheckbox.AutoSize = true;
-            this._autoQuitCheckbox.Location = new System.Drawing.Point(243, 25);
-            this._autoQuitCheckbox.Name = "_autoQuitCheckbox";
-            this._autoQuitCheckbox.Size = new System.Drawing.Size(217, 24);
-            this._autoQuitCheckbox.TabIndex = 11;
-            this._autoQuitCheckbox.Text = "Quit when processes close";
-            this._autoQuitTooltip.SetToolTip(this._autoQuitCheckbox, "Automatically close FFXIV Zoom Hack after \r\npreviously detected instances of FFXI" + "V are closed");
-            this._autoQuitCheckbox.UseVisualStyleBackColor = true;
-            this._autoQuitCheckbox.CheckedChanged += new System.EventHandler(this.AutoQuitCheckChanged);
+            _autoQuitCheckbox.AutoSize = true;
+            _autoQuitCheckbox.Location = new System.Drawing.Point(498, 46);
+            _autoQuitCheckbox.Margin = new System.Windows.Forms.Padding(6);
+            _autoQuitCheckbox.Name = "_autoQuitCheckbox";
+            _autoQuitCheckbox.Size = new System.Drawing.Size(329, 33);
+            _autoQuitCheckbox.TabIndex = 11;
+            _autoQuitCheckbox.Text = "Quit when processes close";
+            _autoQuitTooltip.SetToolTip(_autoQuitCheckbox, "Automatically close FFXIV Zoom Hack after \r\npreviously detected instances of FFXIV are closed");
+            _autoQuitCheckbox.UseVisualStyleBackColor = true;
+            _autoQuitCheckbox.CheckedChanged += AutoQuitCheckChanged;
             // 
             // _gotoProcessButton
             // 
-            this._gotoProcessButton.Location = new System.Drawing.Point(285, 57);
-            this._gotoProcessButton.Name = "_gotoProcessButton";
-            this._gotoProcessButton.Size = new System.Drawing.Size(143, 26);
-            this._gotoProcessButton.TabIndex = 8;
-            this._gotoProcessButton.Text = "Bring to Front";
-            this._gotoProcessButton.UseVisualStyleBackColor = true;
-            this._gotoProcessButton.Click += new System.EventHandler(this._gotoProcessButton_Click);
+            _gotoProcessButton.Location = new System.Drawing.Point(498, 95);
+            _gotoProcessButton.Margin = new System.Windows.Forms.Padding(6);
+            _gotoProcessButton.Name = "_gotoProcessButton";
+            _gotoProcessButton.Size = new System.Drawing.Size(262, 48);
+            _gotoProcessButton.TabIndex = 8;
+            _gotoProcessButton.Text = "Bring to Front";
+            _gotoProcessButton.UseVisualStyleBackColor = true;
+            _gotoProcessButton.Click += _gotoProcessButton_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 52);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 20);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Processes";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(18, 105);
+            label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(127, 29);
+            label1.TabIndex = 8;
+            label1.Text = "Processes";
             // 
             // _processList
             // 
-            this._processList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._processList.FormattingEnabled = true;
-            this._processList.Location = new System.Drawing.Point(95, 55);
-            this._processList.Name = "_processList";
-            this._processList.Size = new System.Drawing.Size(172, 28);
-            this._processList.TabIndex = 1;
+            _processList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            _processList.FormattingEnabled = true;
+            _processList.Location = new System.Drawing.Point(157, 102);
+            _processList.Margin = new System.Windows.Forms.Padding(6);
+            _processList.Name = "_processList";
+            _processList.Size = new System.Drawing.Size(329, 37);
+            _processList.TabIndex = 1;
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
-            this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
+            timer1.Enabled = true;
+            timer1.Interval = 500;
+            timer1.Tick += Timer1Tick;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(499, 270);
-            this.Controls.Add(this._processListBox);
-            this.Controls.Add(this._zoomSettingsBox);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(515, 309);
-            this.MinimumSize = new System.Drawing.Size(515, 309);
-            this.Name = "Form1";
-            this.Text = "FFXIV Zoom Hack";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.Resize += new System.EventHandler(this.Form1_Resize);
-            this._zoomSettingsBox.ResumeLayout(false);
-            this._zoomSettingsBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._fovUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this._zoomUpDown)).EndInit();
-            this._processListBox.ResumeLayout(false);
-            this._processListBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ReadyIndicator)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            ClientSize = new System.Drawing.Size(904, 467);
+            Controls.Add(_processListBox);
+            Controls.Add(_zoomSettingsBox);
+            Font = new System.Drawing.Font("Microsoft YaHei UI", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 134);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Margin = new System.Windows.Forms.Padding(6);
+            MaximizeBox = false;
+            MaximumSize = new System.Drawing.Size(926, 523);
+            MinimumSize = new System.Drawing.Size(926, 523);
+            Name = "Form1";
+            Text = "FFXIV Zoom Hack";
+            FormClosed += Form1_FormClosed;
+            Load += Form1_Load;
+            Resize += Form1_Resize;
+            _zoomSettingsBox.ResumeLayout(false);
+            _zoomSettingsBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)_fovUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)_zoomUpDown).EndInit();
+            _processListBox.ResumeLayout(false);
+            _processListBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ReadyIndicator).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion

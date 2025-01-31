@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace FFXIVZoomHack
+﻿namespace FFXIVZoomHack
 {
     [Serializable]
     public class AppSettings
@@ -10,7 +7,7 @@ namespace FFXIVZoomHack
         public bool AutoQuit { get; set; }
         public float DesiredFov { get; set; }
         public float DesiredZoom { get; set; }
-        
+
         public AppSettings()
         {
             AutoApply = true;
