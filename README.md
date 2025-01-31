@@ -11,10 +11,6 @@ https://github.com/daemitus/CameraPlugin
 
 I am not associated with that project at all.
 
-# Note to self: ILMerge after building
-
-ILMerge.exe /out:ZoomHack.exe FFXIVZoomHack.exe ProcessMemoryApi.dll Microsoft.Bcl.AsyncInterfaces.dll System.Buffers.dll System.Memory.dll System.Numerics.Vectors.dll System.Runtime.CompilerServices.Unsafe.dll System.Text.Encodings.Web.dll System.Text.Json.dll System.Threading.Tasks.Extensions.dll System.ValueTuple.dll
-
 # Submitting updates to offsets after patch
 ~~CE can be downloaded here: http://www.cheatengine.org/downloads.php~~
 
@@ -74,5 +70,3 @@ ILMerge.exe /out:ZoomHack.exe FFXIVZoomHack.exe ProcessMemoryApi.dll Microsoft.B
 ~~You have now found the offset.  Modify the Offset.xml, the offset from above (after ffxiv.exe or ffxiv_dx11.exe)is the StructureAddress in the xml.~~
 
 # No More Offset Update, One Version Forever
-
-Powered By FFXIV Dev Platform/ProcessMemoryApi
