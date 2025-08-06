@@ -24,13 +24,22 @@ namespace FFXIVZoomHack
         private bool _shouldQuitNextTimeProcessEmpty;
 
         //DX11 x86_64 Only
-        private const nint pCurrentZoom = 0x114;
 
-        private const nint pMinZoom = 0x118;
-        private const nint pMaxZoom = 0x11C;
-        private const nint pCurrentFOV = 0x120;
-        private const nint pMinFOV = 0x124;
-        private const nint pMaxFOV = 0x128;
+        //Pre 7.3 offsets
+        //private const nint pCurrentZoom = 0x114;
+        //private const nint pMinZoom = 0x118;
+        //private const nint pMaxZoom = 0x11C;
+        //private const nint pCurrentFOV = 0x120;
+        //private const nint pMinFOV = 0x124;
+        //private const nint pMaxFOV = 0x128;
+
+        //7.3 offsets
+        private const nint pCurrentZoom = 0x124;
+        private const nint pMinZoom = 0x128;
+        private const nint pMaxZoom = 0x12C;
+        private const nint pCurrentFOV = 0x130;
+        private const nint pMinFOV = 0x134;
+        private const nint pMaxFOV = 0x138;
 
         private NotifyIcon _notifyIcon;
 
